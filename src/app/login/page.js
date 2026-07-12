@@ -48,7 +48,7 @@ export default function LoginPage() {
       await loginGoogle(
         "google-user@demo.com",
         "Google Supporter",
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120",
+        "",
         "Supporter"
       );
       router.push("/dashboard");
@@ -69,7 +69,7 @@ export default function LoginPage() {
               href="/"
               className="font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 mb-2"
             >
-              FundFlow
+              Crowdfunding
             </Link>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-white">Welcome back</h2>
             <p className="text-zinc-500 text-sm mt-1">

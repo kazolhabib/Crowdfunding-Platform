@@ -27,6 +27,7 @@ import {
   LogOut,
   Coins,
   Shield,
+  UserRound,
 } from "lucide-react";
 
 export default function DashboardLayout({ children }) {
@@ -106,6 +107,8 @@ export default function DashboardLayout({ children }) {
 
   if (!user) return null; // Let middleware handle redirection
 
+  const hasProfilePhoto = Boolean(user.photoURL) && !user.photoURL.includes("images.unsplash.com");
+
   // Define sidebar links based on role
   const getSidebarLinks = () => {
     switch (user.role) {
@@ -163,7 +166,7 @@ export default function DashboardLayout({ children }) {
             href="/"
             className="font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400"
           >
-            FundFlow
+            Crowdfunding
           </Link>
         </div>
 
@@ -252,8 +255,8 @@ export default function DashboardLayout({ children }) {
               </span>
             </div>
             <Avatar size="sm" className="rounded-full ring-2 ring-zinc-200 dark:ring-zinc-800">
-              <Avatar.Image src={user.photoURL} alt={user.name} />
-              <Avatar.Fallback>{user.name[0]}</Avatar.Fallback>
+              {hasProfilePhoto && <Avatar.Image src={user.photoURL} alt={user.name} />}
+              <Avatar.Fallback><UserRound size={15} /></Avatar.Fallback>
             </Avatar>
           </div>
         </div>
@@ -320,8 +323,8 @@ export default function DashboardLayout({ children }) {
                 <div className="flex justify-between items-center pb-4 border-b border-zinc-200 dark:border-zinc-800">
                   <div className="flex items-center gap-2">
                     <Avatar size="sm" className="rounded-full">
-                      <Avatar.Image src={user.photoURL} alt={user.name} />
-                      <Avatar.Fallback>{user.name[0]}</Avatar.Fallback>
+                      {hasProfilePhoto && <Avatar.Image src={user.photoURL} alt={user.name} />}
+                      <Avatar.Fallback><UserRound size={15} /></Avatar.Fallback>
                     </Avatar>
                     <div>
                       <p className="text-xs font-bold text-zinc-900 dark:text-white">{user.name}</p>

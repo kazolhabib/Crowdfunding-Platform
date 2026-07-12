@@ -72,7 +72,7 @@ export default function RegisterPage() {
               href="/"
               className="font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 mb-2"
             >
-              FundFlow
+              Crowdfunding
             </Link>
             <h2 className="text-xl font-bold text-zinc-800 dark:text-white">Create an account</h2>
             <p className="text-zinc-500 text-sm mt-1">

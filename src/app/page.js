@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React, { useState, useEffect } from "react";
-import { Button, Card, Link, Chip } from "@heroui/react";
+import { Button, Card, Link } from "@heroui/react";
 import {
   ArrowRight,
   ChevronLeft,
@@ -14,6 +14,7 @@ import {
   Award,
   Sparkles,
   TrendingUp,
+  ArrowUpRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -50,10 +51,18 @@ const HERO_SLIDES = [
   },
 ];
 
+const CAMPAIGN_FALLBACK_IMAGES = {
+  Tech: HERO_SLIDES[0].image,
+  Art: HERO_SLIDES[1].image,
+  Health: HERO_SLIDES[2].image,
+  Community: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=1200",
+  default: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=1200",
+};
+
 const TESTIMONIALS = [
   {
     quote:
-      "FundFlow made it possible for us to manufacture our first batch of SolarGrid kits. The credit-based system is transparent, secure, and incredibly user-friendly.",
+      "Crowdfunding made it possible for us to manufacture our first batch of SolarGrid kits. The credit-based system is transparent, secure, and incredibly user-friendly.",
     author: "Sarah Chen",
     role: "Founder, SolarGrid",
     avatar:
@@ -69,7 +78,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      "As a visual artist, raising capital for public works is difficult. FundFlow connected me directly to neighborhood patrons who funded our library mural in days.",
+      "As a visual artist, raising capital for public works is difficult. Crowdfunding connected me directly to neighborhood patrons who funded our library mural in days.",
     author: "Elena Rostova",
     role: "Lead Muralist, ArtHope",
     avatar:
@@ -202,392 +211,250 @@ export default function Home() {
   return (
     <div className="flex-1 flex flex-col justify-start">
       {/* 1. Hero Slider Section */}
-      <section className="relative h-[550px] lg:h-[650px] overflow-hidden bg-zinc-950 text-white">
-        <AnimatePresence initial={false} custom={heroDirection}>
-          <motion.div
-            key={heroIndex}
-            custom={heroDirection}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="absolute inset-0 w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.4)), url(${HERO_SLIDES[heroIndex].image})`,
-            }}
-          >
-            {/* Ambient Overlay */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-r ${HERO_SLIDES[heroIndex].bgGradient}`}
-            />
+      <section className="overflow-hidden bg-[#f4f0e8] px-5 pb-16 pt-10 text-[#24231f] sm:px-8 lg:px-12 lg:pb-24">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mb-10 flex items-center justify-between border-y border-[#cfc6b7] py-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#6b6459]">
+            <span>Independent ideas. Meaningful change.</span>
+            <span className="hidden sm:block">Est. 2024 — Global</span>
+          </div>
 
-            <div className="max-w-7xl mx-auto px-6 h-full flex flex-col justify-center relative z-10">
-              <div className="max-w-2xl flex flex-col items-start">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white border border-white/20 text-xs font-semibold mb-6 uppercase tracking-wider backdrop-blur-md">
-                  <Sparkles size={12} className="text-amber-400" />
-                  Featured Initiatives
-                </span>
-                <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6">
-                  {HERO_SLIDES[heroIndex].title}
-                </h1>
-                <p className="text-zinc-300 text-base lg:text-lg mb-8 leading-relaxed">
-                  {HERO_SLIDES[heroIndex].description}
-                </p>
-                <Button
-                  as={Link}
-                  href={HERO_SLIDES[heroIndex].ctaLink}
-                  color="primary"
-                  size="lg"
-                  className="font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:shadow-xl transition-all"
-                  endContent={<ArrowRight size={16} />}
-                >
-                  {HERO_SLIDES[heroIndex].ctaText}
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(390px,0.98fr)] lg:items-center lg:gap-16">
+            <div className="max-w-3xl py-4 lg:py-10">
+              <p className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-[#9a3412]">The art of collective belief</p>
+              <h1 className="font-serif text-[clamp(3.8rem,8vw,7.9rem)] leading-[0.82] tracking-[-0.085em] text-[#24231f]">
+                Back ideas<br />that <em className="font-normal text-[#9a3412]">endure.</em>
+              </h1>
+              <p className="mt-9 max-w-md text-base leading-7 text-[#645d52] sm:text-lg sm:leading-8">
+                Crowdfunding brings discerning backers and remarkable creators together to shape the work that moves culture forward.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-5">
+                <Button as={Link} href="/campaigns" size="lg" className="h-14 rounded-none bg-[#24231f] px-6 text-xs font-bold uppercase tracking-[0.12em] text-[#f4f0e8] transition-colors hover:bg-[#9a3412]" endContent={<ArrowUpRight size={17} />}>
+                  Explore the collection
                 </Button>
+                <Link href="/register" className="border-b border-[#24231f] pb-1 text-xs font-bold uppercase tracking-[0.12em] text-[#24231f] transition-colors hover:border-[#9a3412] hover:text-[#9a3412]">
+                  Launch a project
+                </Link>
+              </div>
+              <div className="mt-14 grid max-w-xl grid-cols-3 border-t border-[#cfc6b7] pt-5">
+                {[["$2.4m", "directed to ideas"], ["12k", "active patrons"], ["48", "countries reached"]].map(([value, label]) => (
+                  <div key={label} className="border-r border-[#cfc6b7] px-4 first:pl-0 last:border-r-0">
+                    <p className="font-serif text-3xl tracking-[-0.06em]">{value}</p>
+                    <p className="mt-1 text-[9px] font-bold uppercase leading-4 tracking-[0.11em] text-[#6b6459]">{label}</p>
+                  </div>
+                ))}
               </div>
             </div>
-          </motion.div>
-        </AnimatePresence>
 
-        {/* Controls */}
-        <button
-          onClick={prevHeroSlide}
-          className="absolute left-6 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 text-white cursor-pointer transition-colors backdrop-blur-sm"
-          aria-label="Previous Slide"
-        >
-          <ChevronLeft size={24} />
-        </button>
-        <button
-          onClick={nextHeroSlide}
-          className="absolute right-6 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/40 hover:bg-black/60 border border-white/10 text-white cursor-pointer transition-colors backdrop-blur-sm"
-          aria-label="Next Slide"
-        >
-          <ChevronRight size={24} />
-        </button>
-
-        {/* Indicators */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-          {HERO_SLIDES.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setHeroIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all cursor-pointer ${
-                index === heroIndex ? "bg-blue-600 w-8" : "bg-white/40"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
+            <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
+              <div className="absolute -right-5 -top-5 hidden h-28 w-28 rounded-full border border-[#b9ac99] lg:block" />
+              <AnimatePresence initial={false} custom={heroDirection} mode="wait">
+                <motion.article key={heroIndex} custom={heroDirection} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.45 }} className="relative overflow-hidden bg-[#24231f] p-3 shadow-[18px_18px_0_#d8cfbf]">
+                  <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[5/4] lg:aspect-[4/5]">
+                    <img src={HERO_SLIDES[heroIndex].image} alt="Featured campaign" className="h-full w-full object-cover grayscale-[15%] transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
+                      <div className="flex items-center justify-between border-b border-white/35 pb-3 text-[10px] font-bold uppercase tracking-[0.16em]">
+                        <span>Featured story / 0{heroIndex + 1}</span><span>Open now</span>
+                      </div>
+                      <h2 className="mt-4 max-w-md font-serif text-3xl leading-[0.94] tracking-[-0.055em] sm:text-4xl">{HERO_SLIDES[heroIndex].title}</h2>
+                      <Link href={HERO_SLIDES[heroIndex].ctaLink} className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-white hover:text-[#e8c67a]">View campaign <ArrowRight size={15} /></Link>
+                    </div>
+                  </div>
+                </motion.article>
+              </AnimatePresence>
+              <div className="mt-7 flex items-center justify-between">
+                <div className="flex gap-2">
+                  {HERO_SLIDES.map((_, index) => <button key={index} onClick={() => setHeroIndex(index)} aria-label={`Go to slide ${index + 1}`} className={`h-2 transition-all ${index === heroIndex ? "w-10 bg-[#9a3412]" : "w-2 bg-[#b9ac99] hover:bg-[#24231f]"}`} />)}
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={prevHeroSlide} className="grid h-10 w-10 place-items-center border border-[#24231f]/30 transition-colors hover:bg-[#24231f] hover:text-[#f4f0e8]" aria-label="Previous slide"><ChevronLeft size={18} /></button>
+                  <button onClick={nextHeroSlide} className="grid h-10 w-10 place-items-center border border-[#24231f]/30 transition-colors hover:bg-[#24231f] hover:text-[#f4f0e8]" aria-label="Next slide"><ChevronRight size={18} /></button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 2. Top Funded Campaigns */}
-      <section className="py-24 px-6 bg-zinc-50 dark:bg-zinc-950">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <div className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-2">
-                <TrendingUp size={14} />
-                Trending
-              </div>
-              <h2 className="text-3xl lg:text-4xl font-extrabold text-zinc-900 dark:text-white">
-                Top Funded Campaigns
-              </h2>
+      {/* 2. Featured Campaign Collection */}
+      <section className="bg-[#24231f] px-5 py-20 text-[#f7f0e3] sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="flex flex-col gap-8 border-b border-white/15 pb-10 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#e8c67a]"><TrendingUp size={14} />The featured collection</p>
+              <h2 className="mt-5 font-serif text-5xl leading-[0.9] tracking-[-0.07em] sm:text-6xl lg:text-7xl">Ideas with<br /><em className="font-normal text-[#d78b63]">real momentum.</em></h2>
             </div>
-
-            {/* Interactive Category Chips */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <Chip
-                  key={cat}
-                  as="button"
-                  onClick={() => setActiveCategory(cat)}
-                  variant={activeCategory === cat ? "solid" : "bordered"}
-                  color={activeCategory === cat ? "primary" : "default"}
-                  className="font-medium text-xs py-1 px-3 border-zinc-200 dark:border-zinc-800 cursor-pointer select-none hover:bg-zinc-100 dark:hover:bg-zinc-900"
-                >
-                  {cat}
-                </Chip>
-              ))}
+            <div className="max-w-sm lg:text-right">
+              <p className="text-sm leading-6 text-[#c7beb0]">A considered selection of independent projects gathering the strongest support from our community.</p>
+              <Link href="/campaigns" className="mt-5 inline-flex items-center gap-2 border-b border-[#e8c67a] pb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#e8c67a] transition-colors hover:border-white hover:text-white">View all campaigns <ArrowRight size={14} /></Link>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-b border-white/15 pb-6">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`border-b pb-1 text-[10px] font-bold uppercase tracking-[0.16em] transition-colors ${activeCategory === cat ? "border-[#e8c67a] text-[#e8c67a]" : "border-transparent text-[#b4aa9b] hover:text-white"}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12 lg:gap-5">
             <AnimatePresence mode="wait">
               {filteredCampaigns.length > 0 ? (
-                filteredCampaigns.map((camp) => {
-                  const percent = Math.min(
-                    100,
-                    Math.round((camp.amount_raised / camp.funding_goal) * 100)
-                  );
+                filteredCampaigns.map((camp, index) => {
+                  const percent = Math.min(100, Math.round((camp.amount_raised / camp.funding_goal) * 100));
+                  const campaignFallbackImage = CAMPAIGN_FALLBACK_IMAGES[camp.category] || CAMPAIGN_FALLBACK_IMAGES.default;
+                  const campaignImage = camp.image_url || campaignFallbackImage;
+                  const cardSize = index === 0 ? "lg:col-span-6 lg:row-span-2 lg:min-h-[570px]" : index < 3 ? "lg:col-span-3 lg:min-h-[278px]" : "lg:col-span-4 lg:min-h-[340px]";
                   return (
-                    <motion.div
+                    <motion.article
                       key={camp._id}
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.4 }}
+                      exit={{ opacity: 0, y: -18 }}
+                      transition={{ duration: 0.38, delay: Math.min(index * 0.045, 0.16) }}
+                      className={`group relative min-h-[340px] overflow-hidden bg-[#3a3832] ${cardSize}`}
                     >
-                      <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden hover:-translate-y-1.5 transition-transform duration-300 h-full flex flex-col justify-between shadow-sm">
-                        <Card.Content className="p-0 flex flex-col h-full justify-between">
-                          {/* Image */}
-                          <div className="relative h-48 w-full bg-zinc-200 dark:bg-zinc-800">
-                            <img
-                              src={camp.image_url}
-                              alt={camp.title}
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute top-4 left-4">
-                              <span className="px-2.5 py-1 text-[10px] font-bold uppercase bg-blue-600 text-white rounded-md tracking-wider">
-                                {camp.category}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Content */}
-                          <div className="p-6 flex-1 flex flex-col justify-between">
-                            <div>
-                              <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2 line-clamp-1">
-                                {camp.title}
-                              </h3>
-                              <p className="text-zinc-650 dark:text-zinc-400 text-xs line-clamp-2 leading-relaxed mb-6">
-                                {camp.story}
-                              </p>
-                            </div>
-
-                            {/* Fund details */}
-                            <div className="flex flex-col gap-2">
-                              <div className="flex justify-between items-center text-xs font-bold text-zinc-850 dark:text-zinc-350">
-                                <span>{percent}% Funded</span>
-                                <span>{camp.amount_raised} Credits</span>
-                              </div>
-                              {/* Progress bar */}
-                              <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                                <div
-                                  className="h-full bg-blue-600 rounded-full transition-all duration-500"
-                                  style={{ width: `${percent}%` }}
-                                />
-                              </div>
-                              <div className="flex justify-between items-center text-[10px] text-zinc-400 font-semibold mt-1">
-                                <span>Goal: {camp.funding_goal} Cr</span>
-                                <span>Min contribution: {camp.minimum_contribution} Cr</span>
-                              </div>
-                            </div>
-                          </div>
-                        </Card.Content>
-                      </Card>
-                    </motion.div>
+                      <img
+                        src={campaignImage}
+                        alt={camp.title}
+                        onError={(event) => {
+                          if (event.currentTarget.dataset.fallbackApplied) return;
+                          event.currentTarget.dataset.fallbackApplied = "true";
+                          event.currentTarget.src = campaignFallbackImage;
+                        }}
+                        className="absolute inset-0 h-full w-full object-cover grayscale-[22%] transition duration-700 group-hover:scale-105 group-hover:grayscale-0"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#171713] via-[#171713]/35 to-transparent" />
+                      <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4 sm:p-5">
+                        <span className="bg-[#f7f0e3] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-[#24231f]">{camp.category}</span>
+                        <span className="border border-white/35 bg-black/15 px-2 py-1 text-[9px] font-bold tracking-[0.12em] text-white backdrop-blur-sm">0{index + 1}</span>
+                      </div>
+                      <Link href={`/campaigns/${camp._id}`} className="absolute inset-0 z-10" aria-label={`View ${camp.title}`} />
+                      <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                        <div className="mb-4 flex items-end justify-between gap-3 border-b border-white/25 pb-3">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#e8c67a]">{percent}% funded</span>
+                          <span className="text-[10px] font-semibold text-white/80">{camp.amount_raised.toLocaleString()} Cr</span>
+                        </div>
+                        <h3 className={`font-serif leading-[0.95] tracking-[-0.05em] text-white ${index === 0 ? "text-3xl sm:text-5xl" : "text-2xl"}`}>{camp.title}</h3>
+                        <div className="mt-5 flex items-center justify-between gap-3 text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">
+                          <span>Goal {camp.funding_goal.toLocaleString()} Cr</span>
+                          <span className="flex items-center gap-1 text-[#e8c67a]">Discover <ArrowUpRight size={14} /></span>
+                        </div>
+                        <div className="mt-3 h-px w-full bg-white/25"><div className="h-full bg-[#e8c67a] transition-all duration-500" style={{ width: `${percent}%` }} /></div>
+                      </div>
+                    </motion.article>
                   );
                 })
               ) : (
-                <div className="col-span-full py-16 text-center text-zinc-500">
-                  No campaigns found in this category.
-                </div>
+                <div className="col-span-full border border-white/15 py-20 text-center text-sm text-[#c7beb0]">No campaigns found in this category.</div>
               )}
             </AnimatePresence>
           </div>
         </div>
       </section>
 
-      {/* 3. How It Works Section */}
-      <section className="py-24 px-6 bg-white dark:bg-black border-t border-zinc-100 dark:border-zinc-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center flex flex-col items-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-extrabold text-zinc-900 dark:text-white mb-4">
-              How FundFlow Works
-            </h2>
-            <p className="max-w-xl text-zinc-500 text-sm">
-              We connect visionaries with patrons through a simple, credit-based crowdfunding
-              workflow.
-            </p>
+      {/* 3. The Crowdfunding Process */}
+      <section className="overflow-hidden bg-[#fdfaf4] px-5 py-20 text-[#24231f] sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto grid max-w-[1440px] gap-14 lg:grid-cols-[0.82fr_1.18fr] lg:gap-24">
+          <div className="lg:sticky lg:top-32 lg:h-fit">
+            <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a3412]"><Sparkles size={14} />A clear path to impact</p>
+            <h2 className="mt-5 max-w-md font-serif text-5xl leading-[0.88] tracking-[-0.07em] sm:text-6xl">Built for<br /><em className="font-normal text-[#9a3412]">belief.</em></h2>
+            <p className="mt-7 max-w-sm text-sm leading-7 text-[#665e53]">From the first promise to a funded idea, every step is designed to make backing work feel transparent, personal and direct.</p>
+            <div className="mt-10 flex items-center gap-4">
+              <span className="grid h-12 w-12 place-items-center rounded-full bg-[#24231f] text-[#e8c67a]"><ShieldCheck size={21} /></span>
+              <p className="text-[10px] font-bold uppercase leading-5 tracking-[0.13em] text-[#786f63]">Transparent process<br />for every contribution</p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="relative grid gap-4 before:absolute before:bottom-10 before:left-8 before:top-10 before:w-px before:bg-[#d8cdbc] sm:before:left-10">
             {[
               {
                 step: "01",
-                title: "Register & Pick Role",
-                desc: "Sign up and choose to join as a Supporter or Creator. Supporters receive 50 initial credits, and Creators get 20 credits to seed their campaigns.",
-                color: "text-blue-600 dark:text-blue-400",
+                title: "Choose your place in the story",
+                desc: "Join as a supporter or creator. Every account begins with a clear role and the tools that make sense for it.",
+                note: "Supporters receive 50 credits",
               },
               {
                 step: "02",
-                title: "Launch or Back Campaigns",
-                desc: "Creators configure funding goals, deadlines, and rewards. Supporters use their credits to back initiatives they care about directly from the platform.",
-                color: "text-indigo-600 dark:text-indigo-400",
+                title: "Share an idea or back one",
+                desc: "Creators present the work they want to make. Supporters discover projects and direct credits toward the ideas they believe in.",
+                note: "Back projects with confidence",
               },
               {
                 step: "03",
-                title: "Approve & Withdraw Funds",
-                desc: "Once a campaign succeeds and the community verifies milestones, the funds clear. Creators request withdrawals while supporters track rewards.",
-                color: "text-teal-650 dark:text-teal-400",
+                title: "Watch momentum become impact",
+                desc: "Funding progress remains visible from first contribution through to approval, fulfilment and creator withdrawal.",
+                note: "Every step stays accountable",
               },
-            ].map((step, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col gap-4 relative md:border-r border-zinc-100 dark:border-zinc-900 last:border-0 pr-0 md:pr-8"
+            ].map((step, index) => (
+              <motion.article
+                key={step.step}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.45, delay: index * 0.08 }}
+                className="relative grid grid-cols-[64px_1fr] gap-4 border border-[#ded4c4] bg-[#f7f0e3] p-5 transition-transform duration-300 hover:-translate-y-1 hover:shadow-[7px_7px_0_#d8cdbc] sm:grid-cols-[80px_1fr] sm:gap-7 sm:p-7"
               >
-                <span className={`text-5xl font-black ${step.color} tracking-tighter`}>
-                  {step.step}
-                </span>
-                <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
-                  {step.title}
-                </h3>
-                <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
-                  {step.desc}
-                </p>
+                <span className="relative z-10 grid h-10 w-10 place-items-center rounded-full border border-[#b9ac99] bg-[#fdfaf4] font-serif text-lg tracking-[-0.08em] text-[#9a3412] sm:h-12 sm:w-12 sm:text-xl">{step.step}</span>
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#9a3412]">{step.note}</p>
+                  <h3 className="mt-3 font-serif text-2xl leading-none tracking-[-0.05em] text-[#24231f] sm:text-3xl">{step.title}</h3>
+                  <p className="mt-4 max-w-lg text-sm leading-6 text-[#665e53]">{step.desc}</p>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Platform Impact */}
+      <section className="bg-[#9a3412] px-5 py-20 text-[#f7f0e3] sm:px-8 lg:px-12 lg:py-24">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="flex flex-col justify-between gap-6 border-b border-[#f7f0e3]/35 pb-8 lg:flex-row lg:items-end">
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#f2c79c]">The reach of belief</p><h2 className="mt-4 font-serif text-5xl tracking-[-0.07em] sm:text-6xl">Impact, in motion.</h2></div>
+            <p className="max-w-sm text-sm leading-6 text-[#f7dfc4]">A growing network of creators and supporters directing resources toward work with real-world potential.</p>
+          </div>
+          <div className="grid divide-y divide-[#f7f0e3]/25 md:grid-cols-3 md:divide-x md:divide-y-0">
+            {[["$24.5M+", "capital directed"], ["1,420+", "projects funded"], ["120K+", "people reached"]].map(([value, label]) => (
+              <div key={label} className="py-9 first:pl-0 md:px-9 md:py-12 md:first:pl-0">
+                <p className="font-serif text-5xl tracking-[-0.07em] sm:text-6xl">{value}</p>
+                <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#f2c79c]">{label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. Platform Impact in Numbers */}
-      <section className="py-24 px-6 bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-150 dark:border-zinc-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-              <Card.Content className="p-8 flex items-center gap-6">
-                <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-100/60 dark:border-blue-900/30">
-                  <Coins size={32} />
-                </div>
-                <div>
-                  <span className="text-3xl font-extrabold text-zinc-900 dark:text-white">
-                    $24.5M+
-                  </span>
-                  <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mt-1">
-                    Total Capital Raised
-                  </p>
-                </div>
-              </Card.Content>
-            </Card>
-
-            <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-              <Card.Content className="p-8 flex items-center gap-6">
-                <div className="p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100/60 dark:border-indigo-900/30">
-                  <Award size={32} />
-                </div>
-                <div>
-                  <span className="text-3xl font-extrabold text-zinc-900 dark:text-white">
-                    1,420+
-                  </span>
-                  <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mt-1">
-                    Projects Funded
-                  </p>
-                </div>
-              </Card.Content>
-            </Card>
-
-            <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-              <Card.Content className="p-8 flex items-center gap-6">
-                <div className="p-4 rounded-xl bg-teal-50 dark:bg-teal-950/40 text-teal-650 dark:text-teal-400 border border-teal-100/60 dark:border-teal-900/30">
-                  <Users size={32} />
-                </div>
-                <div>
-                  <span className="text-3xl font-extrabold text-zinc-900 dark:text-white">
-                    120K+
-                  </span>
-                  <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mt-1">
-                    Lives Impacted
-                  </p>
-                </div>
-              </Card.Content>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Testimonials Section */}
-      <section className="py-24 px-6 bg-white dark:bg-black border-t border-zinc-100 dark:border-zinc-900 overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30 text-xs font-semibold mb-6">
-            <Award size={14} className="text-amber-500" />
-            Testimonials
-          </div>
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-zinc-900 dark:text-white mb-12">
-            Success Stories from FundFlow
-          </h2>
-
-          <div className="w-full relative min-h-[220px] flex items-center justify-center">
+      {/* 5. Community Notes */}
+      <section className="bg-[#f7f0e3] px-5 py-20 text-[#24231f] sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto grid max-w-[1200px] gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a3412]">In their own words</p><h2 className="mt-5 font-serif text-5xl leading-[0.88] tracking-[-0.07em]">People make<br /><em className="font-normal text-[#9a3412]">possibility.</em></h2></div>
+          <div className="border-t border-[#cfc2af] pt-7">
             <AnimatePresence mode="wait">
-              <motion.div
-                key={testimonialIndex}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col items-center max-w-2xl"
-              >
-                <p className="text-zinc-650 dark:text-zinc-400 text-lg lg:text-xl italic leading-relaxed mb-8">
-                  &ldquo;{TESTIMONIALS[testimonialIndex].quote}&rdquo;
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-blue-600/40">
-                    <img
-                      src={TESTIMONIALS[testimonialIndex].avatar}
-                      alt={TESTIMONIALS[testimonialIndex].author}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="text-left">
-                    <h4 className="font-bold text-zinc-850 dark:text-white text-sm">
-                      {TESTIMONIALS[testimonialIndex].author}
-                    </h4>
-                    <p className="text-zinc-500 text-xs">
-                      {TESTIMONIALS[testimonialIndex].role}
-                    </p>
-                  </div>
+              <motion.div key={testimonialIndex} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.35 }}>
+                <span className="font-serif text-7xl leading-none text-[#9a3412]">“</span>
+                <p className="-mt-6 max-w-2xl font-serif text-3xl leading-[1.06] tracking-[-0.045em] sm:text-4xl">{TESTIMONIALS[testimonialIndex].quote}</p>
+                <div className="mt-9 flex items-center justify-between border-t border-[#cfc2af] pt-5">
+                  <div><p className="font-bold text-[#24231f]">{TESTIMONIALS[testimonialIndex].author}</p><p className="mt-1 text-[10px] font-bold uppercase tracking-[0.13em] text-[#786f63]">{TESTIMONIALS[testimonialIndex].role}</p></div>
+                  <span className="grid h-11 w-11 place-items-center rounded-full bg-[#24231f] font-serif text-base text-[#f2c79c]">{TESTIMONIALS[testimonialIndex].author.split(" ").map((name) => name[0]).join("")}</span>
                 </div>
               </motion.div>
             </AnimatePresence>
-          </div>
-
-          <div className="flex gap-2 mt-8">
-            {TESTIMONIALS.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setTestimonialIndex(idx)}
-                className={`w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${
-                  idx === testimonialIndex ? "bg-blue-600 w-6" : "bg-zinc-300 dark:bg-zinc-800"
-                }`}
-                aria-label={`Go to testimonial ${idx + 1}`}
-              />
-            ))}
+            <div className="mt-8 flex gap-2">{TESTIMONIALS.map((_, idx) => <button key={idx} onClick={() => setTestimonialIndex(idx)} aria-label={`Go to testimonial ${idx + 1}`} className={`h-1.5 transition-all ${idx === testimonialIndex ? "w-10 bg-[#9a3412]" : "w-4 bg-[#cfc2af] hover:bg-[#786f63]"}`} />)}</div>
           </div>
         </div>
       </section>
 
-      {/* 6. Bottom CTA Section */}
-      <section className="py-24 px-6 bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-150 dark:border-zinc-900">
-        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-900/60 dark:to-indigo-900/60 p-8 lg:p-16 text-center text-white relative overflow-hidden shadow-xl shadow-blue-100 dark:shadow-none">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col items-center">
-            <h2 className="text-3xl lg:text-5xl font-extrabold mb-6 leading-tight max-w-2xl">
-              Ready to bring your creative projects to life?
-            </h2>
-            <p className="text-blue-100 text-base lg:text-lg mb-10 max-w-xl">
-              Join thousands of creators who are funding their tech products, artwork, films,
-              and businesses on FundFlow today.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Button
-                as={Link}
-                href="/register"
-                size="lg"
-                className="w-full sm:w-auto font-semibold bg-white text-blue-700 hover:bg-blue-50 transition-colors shadow-md animate-pulse"
-              >
-                Sign Up Now
-              </Button>
-              <Button
-                as={Link}
-                href="/campaigns"
-                size="lg"
-                variant="bordered"
-                className="w-full sm:w-auto font-semibold text-white border-white/40 hover:bg-white/10 transition-colors"
-              >
-                See Current Campaigns
-              </Button>
-            </div>
-          </div>
+      {/* 6. Bottom CTA */}
+      <section className="bg-[#f7f0e3] px-5 pb-20 sm:px-8 lg:px-12 lg:pb-28">
+        <div className="mx-auto max-w-[1440px] overflow-hidden bg-[#24231f] px-6 py-14 text-[#f7f0e3] sm:px-10 lg:grid lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16 lg:px-16 lg:py-20">
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#e8c67a]">Start where you are</p><h2 className="mt-5 max-w-3xl font-serif text-5xl leading-[0.88] tracking-[-0.07em] sm:text-6xl lg:text-7xl">Make room for<br /><em className="font-normal text-[#d78b63]">the remarkable.</em></h2><p className="mt-7 max-w-xl text-sm leading-7 text-[#c7beb0]">Whether you are shaping a new idea or looking for one to stand behind, there is a place for you here.</p></div>
+          <div className="mt-10 flex flex-col gap-3 lg:mt-0"><Button as={Link} href="/register" size="lg" className="h-12 rounded-none bg-[#f7f0e3] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24231f] hover:bg-[#e8c67a]" endContent={<ArrowUpRight size={15} />}>Create your account</Button><Link href="/campaigns" className="border-b border-white/25 py-3 text-center text-[10px] font-bold uppercase tracking-[0.14em] text-[#f7f0e3] transition-colors hover:border-[#e8c67a] hover:text-[#e8c67a]">Explore campaigns</Link></div>
         </div>
       </section>
     </div>

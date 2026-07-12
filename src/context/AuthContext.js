@@ -9,19 +9,19 @@ const MOCK_USER_DETAILS = {
   Supporter: {
     email: "supporter@demo.com",
     name: "John Supporter",
-    photoURL: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120",
+    photoURL: "",
     role: "Supporter",
   },
   Creator: {
     email: "creator@demo.com",
     name: "Jane Creator",
-    photoURL: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120",
+    photoURL: "",
     role: "Creator",
   },
   Admin: {
     email: "admin@demo.com",
     name: "Alex Admin",
-    photoURL: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=120",
+    photoURL: "",
     role: "Admin",
   },
 };
@@ -133,6 +133,20 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const updateProfilePhoto = async (photoURL) => {
+    const res = await fetch("/api/auth/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ photoURL }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Unable to update profile picture.");
+    }
+    setUser(data.user);
+    return data.user;
+  };
+
   // Helper for navbar to dynamically switch roles for testing
   const loginMockRole = async (role) => {
     if (role === "Visitor") {
@@ -156,6 +170,7 @@ export function AuthProvider({ children }) {
         loginGoogle,
         register,
         logout,
+        updateProfilePhoto,
         loginMockRole,
         loading,
         currentRole,

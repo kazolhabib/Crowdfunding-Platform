@@ -22,10 +22,13 @@ export async function POST(req) {
         user = new User({
           name: googleName || "Google User",
           email,
-          photoURL: googlePhoto || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150",
+          photoURL: googlePhoto || "",
           password: dummyPassword,
           role: googleRole || "Supporter",
         });
+        await user.save();
+      } else if (email.endsWith("@demo.com") && user.photoURL?.includes("images.unsplash.com")) {
+        user.photoURL = "";
         await user.save();
       }
 

@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "FundFlow | Modern Crowdfunding Platform",
+  title: "Crowdfunding | Crowdfunding Platform",
   description:
-    "FundFlow empowers creators to raise capital and supporters to back visionaries using a transparent, credit-based crowdfunding model.",
+    "Crowdfunding connects creators with supporters through a transparent, credit-based crowdfunding platform.",
 };
 
 export default function RootLayout({ children }) {

@@ -1,6 +1,6 @@
-# FundFlow — Crowdfunding Platform
+# Crowdfunding Platform
 
-FundFlow is a role-based crowdfunding platform built with Next.js, MongoDB, HeroUI, and Stripe Checkout.
+Crowdfunding is a role-based crowdfunding platform built with Next.js, MongoDB, HeroUI, and Stripe Checkout.
 
 ## Setup checklist
 
