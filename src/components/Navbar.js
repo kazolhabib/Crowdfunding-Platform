@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@heroui/react";
+import { Link, Button, Dropdown, Avatar, Label } from "@heroui/react";
 import { useAuth } from "@/context/AuthContext";
 import { Coins, LogOut, User as UserIcon, LayoutDashboard, ChevronDown, Menu, X } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
@@ -84,44 +84,44 @@ export default function Navbar() {
 
           {/* Role Selector (Demo Tool) */}
           <Dropdown placement="bottom-end">
-            <DropdownTrigger>
-              <button
-                type="button"
-                className="font-semibold text-xs h-8 px-2.5 rounded-medium border border-warning/50 hover:bg-warning-50 dark:hover:bg-warning-950/20 flex items-center gap-1 text-warning outline-none cursor-pointer"
+            <Dropdown.Trigger>
+              <Button
+                size="sm"
+                variant="bordered"
+                color="warning"
+                className="font-semibold text-xs h-8 px-2.5"
               >
                 Role: {currentRole} <ChevronDown size={10} className="ml-0.5" />
-              </button>
-            </DropdownTrigger>
-            <DropdownMenu
-              aria-label="Mock Session Selector"
-              variant="flat"
-              onAction={(key) => login(key)}
-            >
-              <DropdownItem
-                key="Visitor"
-                className={currentRole === "Visitor" ? "text-primary font-semibold" : ""}
+              </Button>
+            </Dropdown.Trigger>
+            <Dropdown.Popover>
+              <Dropdown.Menu
+                aria-label="Mock Session Selector"
+                variant="flat"
+                onAction={(key) => login(key)}
               >
-                Guest/Visitor
-              </DropdownItem>
-              <DropdownItem
-                key="Supporter"
-                className={currentRole === "Supporter" ? "text-primary font-semibold" : ""}
-              >
-                Supporter (50 credits)
-              </DropdownItem>
-              <DropdownItem
-                key="Creator"
-                className={currentRole === "Creator" ? "text-primary font-semibold" : ""}
-              >
-                Creator (20 credits)
-              </DropdownItem>
-              <DropdownItem
-                key="Admin"
-                className={currentRole === "Admin" ? "text-primary font-semibold" : ""}
-              >
-                Admin
-              </DropdownItem>
-            </DropdownMenu>
+                <Dropdown.Item id="Visitor" textValue="Guest/Visitor">
+                  <Label className={currentRole === "Visitor" ? "text-primary font-semibold" : ""}>
+                    Guest/Visitor
+                  </Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="Supporter" textValue="Supporter (50 credits)">
+                  <Label className={currentRole === "Supporter" ? "text-primary font-semibold" : ""}>
+                    Supporter (50 credits)
+                  </Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="Creator" textValue="Creator (20 credits)">
+                  <Label className={currentRole === "Creator" ? "text-primary font-semibold" : ""}>
+                    Creator (20 credits)
+                  </Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="Admin" textValue="Admin">
+                  <Label className={currentRole === "Admin" ? "text-primary font-semibold" : ""}>
+                    Admin
+                  </Label>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown.Popover>
           </Dropdown>
 
           {/* Auth Actions */}
@@ -148,49 +148,47 @@ export default function Navbar() {
             </div>
           ) : (
             <Dropdown placement="bottom-end">
-              <DropdownTrigger>
-                <button
-                  type="button"
-                  className="flex items-center justify-center rounded-full outline-none focus:outline-none cursor-pointer transition-transform"
-                >
-                  <Avatar
-                    isBordered
-                    className="ring-offset-background"
-                    color="primary"
-                    name={user.name}
-                    size="sm"
-                    src={user.photoURL}
-                  />
-                </button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile_info" className="h-14 gap-2" textValue="Profile Info">
-                  <p className="font-semibold text-xs text-zinc-500">Signed in as</p>
-                  <p className="font-semibold text-sm text-blue-600 dark:text-blue-400">{user.email}</p>
-                </DropdownItem>
-                <DropdownItem key="role_display" className="text-zinc-500 text-xs" textValue="Role Display">
-                  Role: <span className="font-bold text-zinc-700 dark:text-zinc-300">{user.role}</span>
-                </DropdownItem>
-                <DropdownItem key="credits_display" className="text-zinc-500 text-xs md:hidden" textValue="Credits Display">
-                  Credits: <span className="font-bold text-indigo-600 dark:text-indigo-400">{user.credits}</span>
-                </DropdownItem>
-                <DropdownItem key="profile" startContent={<UserIcon size={14} />} href="/profile" textValue="My Profile">
-                  My Profile
-                </DropdownItem>
-                <DropdownItem key="dashboard" startContent={<LayoutDashboard size={14} />} href="/dashboard" textValue="Dashboard">
-                  Dashboard
-                </DropdownItem>
-                <DropdownItem
-                  key="logout"
-                  color="danger"
-                  className="text-danger"
-                  startContent={<LogOut size={14} />}
-                  onAction={logout}
-                  textValue="Logout"
-                >
-                  Log Out
-                </DropdownItem>
-              </DropdownMenu>
+              <Dropdown.Trigger>
+                <Avatar
+                  isBordered
+                  as="button"
+                  className="transition-transform ring-offset-background"
+                  color="primary"
+                  name={user.name}
+                  size="sm"
+                  src={user.photoURL}
+                />
+              </Dropdown.Trigger>
+              <Dropdown.Popover>
+                <Dropdown.Menu aria-label="Profile Actions" variant="flat">
+                  <Dropdown.Item id="profile_info" textValue="Profile Info" className="h-14 gap-2">
+                    <p className="font-semibold text-xs text-zinc-500">Signed in as</p>
+                    <p className="font-semibold text-sm text-blue-600 dark:text-blue-400">{user.email}</p>
+                  </Dropdown.Item>
+                  <Dropdown.Item id="role_display" textValue="Role Display" className="text-zinc-500 text-xs">
+                    Role: <span className="font-bold text-zinc-700 dark:text-zinc-300">{user.role}</span>
+                  </Dropdown.Item>
+                  <Dropdown.Item id="credits_display" textValue="Credits Display" className="text-zinc-500 text-xs md:hidden">
+                    Credits: <span className="font-bold text-indigo-600 dark:text-indigo-400">{user.credits}</span>
+                  </Dropdown.Item>
+                  <Dropdown.Item id="profile" textValue="My Profile" startContent={<UserIcon size={14} />} href="/profile">
+                    <Label>My Profile</Label>
+                  </Dropdown.Item>
+                  <Dropdown.Item id="dashboard" textValue="Dashboard" startContent={<LayoutDashboard size={14} />} href="/dashboard">
+                    <Label>Dashboard</Label>
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    id="logout"
+                    textValue="Logout"
+                    color="danger"
+                    className="text-danger"
+                    startContent={<LogOut size={14} />}
+                    onAction={logout}
+                  >
+                    <Label className="text-danger">Log Out</Label>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown.Popover>
             </Dropdown>
           )}
         </div>
