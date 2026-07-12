@@ -85,14 +85,12 @@ export default function Navbar() {
           {/* Role Selector (Demo Tool) */}
           <Dropdown placement="bottom-end">
             <DropdownTrigger>
-              <Button
-                size="sm"
-                variant="bordered"
-                color="warning"
-                className="font-semibold text-xs h-8 px-2.5"
+              <button
+                type="button"
+                className="font-semibold text-xs h-8 px-2.5 rounded-medium border border-warning/50 hover:bg-warning-50 dark:hover:bg-warning-950/20 flex items-center gap-1 text-warning outline-none cursor-pointer"
               >
                 Role: {currentRole} <ChevronDown size={10} className="ml-0.5" />
-              </Button>
+              </button>
             </DropdownTrigger>
             <DropdownMenu
               aria-label="Mock Session Selector"
@@ -151,15 +149,19 @@ export default function Navbar() {
           ) : (
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
-                <Avatar
-                  isBordered
-                  as="button"
-                  className="transition-transform ring-offset-background"
-                  color="primary"
-                  name={user.name}
-                  size="sm"
-                  src={user.photoURL}
-                />
+                <button
+                  type="button"
+                  className="flex items-center justify-center rounded-full outline-none focus:outline-none cursor-pointer transition-transform"
+                >
+                  <Avatar
+                    isBordered
+                    className="ring-offset-background"
+                    color="primary"
+                    name={user.name}
+                    size="sm"
+                    src={user.photoURL}
+                  />
+                </button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile_info" className="h-14 gap-2" textValue="Profile Info">
