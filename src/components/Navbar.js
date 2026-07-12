@@ -85,14 +85,12 @@ export default function Navbar() {
           {/* Role Selector (Demo Tool) */}
           <Dropdown placement="bottom-end">
             <Dropdown.Trigger>
-              <Button
-                size="sm"
-                variant="bordered"
-                color="warning"
-                className="font-semibold text-xs h-8 px-2.5"
+              <span
+                role="button"
+                className="inline-flex items-center justify-center font-semibold text-xs h-8 px-2.5 rounded-medium border border-warning/50 hover:bg-warning-50 dark:hover:bg-warning-950/20 text-warning cursor-pointer select-none"
               >
                 Role: {currentRole} <ChevronDown size={10} className="ml-0.5" />
-              </Button>
+              </span>
             </Dropdown.Trigger>
             <Dropdown.Popover>
               <Dropdown.Menu
@@ -149,15 +147,15 @@ export default function Navbar() {
           ) : (
             <Dropdown placement="bottom-end">
               <Dropdown.Trigger>
-                <Avatar
-                  isBordered
-                  as="button"
-                  className="transition-transform ring-offset-background"
-                  color="primary"
-                  name={user.name}
-                  size="sm"
-                  src={user.photoURL}
-                />
+                <span className="flex items-center justify-center cursor-pointer select-none">
+                  <Avatar
+                    className="transition-transform ring-2 ring-blue-600 dark:ring-blue-400 ring-offset-2 ring-offset-white dark:ring-offset-black rounded-full"
+                    size="sm"
+                  >
+                    <Avatar.Image src={user.photoURL} alt={user.name} />
+                    <Avatar.Fallback>{user.name[0]}</Avatar.Fallback>
+                  </Avatar>
+                </span>
               </Dropdown.Trigger>
               <Dropdown.Popover>
                 <Dropdown.Menu aria-label="Profile Actions" variant="flat">
@@ -233,7 +231,10 @@ export default function Navbar() {
             {user ? (
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3">
-                  <Avatar size="sm" src={user.photoURL} name={user.name} />
+                  <Avatar size="sm" className="rounded-full">
+                    <Avatar.Image src={user.photoURL} alt={user.name} />
+                    <Avatar.Fallback>{user.name[0]}</Avatar.Fallback>
+                  </Avatar>
                   <div>
                     <p className="font-semibold text-sm text-zinc-800 dark:text-zinc-200">{user.name}</p>
                     <p className="text-xs text-zinc-500">{user.email}</p>
