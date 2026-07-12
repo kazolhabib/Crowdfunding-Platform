@@ -27,7 +27,10 @@ export default function MyCampaignsPage() {
   };
 
   useEffect(() => {
-    fetchCampaigns();
+    const timeoutId = setTimeout(() => {
+      void fetchCampaigns();
+    }, 0);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const openEdit = (camp) => {
@@ -101,7 +104,7 @@ export default function MyCampaignsPage() {
       {campaigns.length === 0 ? (
         <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
           <Card.Content className="p-8 text-center text-sm text-zinc-500">
-            You haven't created any campaigns yet.
+            You haven&apos;t created any campaigns yet.
           </Card.Content>
         </Card>
       ) : (

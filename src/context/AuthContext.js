@@ -52,7 +52,10 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    fetchSession();
+    const timeoutId = setTimeout(() => {
+      void fetchSession();
+    }, 0);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const login = async (email, password) => {
@@ -148,6 +151,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        refreshSession: fetchSession,
         login,
         loginGoogle,
         register,

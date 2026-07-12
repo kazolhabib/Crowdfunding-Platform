@@ -45,7 +45,10 @@ export default function WithdrawalsPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    const timeoutId = setTimeout(() => {
+      void fetchData();
+    }, 0);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const handleSubmit = async (e) => {

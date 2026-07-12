@@ -1,25 +1,15 @@
 "use client";
 
-import React from "react";
-import { Card } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import { Avatar, Button, Card, Spinner, Table } from "@heroui/react";
 
+const ROLES = ["Admin", "Creator", "Supporter"];
 export default function ManageUsersPage() {
-  return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">
-          Manage Users
-        </h1>
-        <p className="text-zinc-500 text-xs mt-1">View and administer platform user accounts.</p>
-      </div>
-
-      <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-        <Card.Content className="p-8">
-          <p className="text-sm text-zinc-700 dark:text-zinc-350">
-            Search, filter, edit roles, or suspend user accounts across the system.
-          </p>
-        </Card.Content>
-      </Card>
-    </div>
-  );
+  const [users, setUsers] = useState([]); const [loading, setLoading] = useState(true); const [error, setError] = useState(""); const [busy, setBusy] = useState(null);
+  const load = async () => { try { const response = await fetch("/api/admin/users"); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to load users."); setUsers(data.users); } catch (loadError) { setError(loadError.message); } finally { setLoading(false); } };
+  useEffect(() => { const id = setTimeout(() => { void load(); }, 0); return () => clearTimeout(id); }, []);
+  const updateRole = async (userId, role) => { setBusy(userId); setError(""); try { const response = await fetch("/api/admin/users", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId, role }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to update role."); setUsers((items) => items.map((user) => user._id === userId ? data.user : user)); } catch (actionError) { setError(actionError.message); } finally { setBusy(null); } };
+  const remove = async (userId) => { if (!window.confirm("Remove this user permanently?")) return; setBusy(userId); setError(""); try { const response = await fetch(`/api/admin/users?id=${userId}`, { method: "DELETE" }); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to remove user."); setUsers((items) => items.filter((user) => user._id !== userId)); } catch (actionError) { setError(actionError.message); } finally { setBusy(null); } };
+  if (loading) return <div className="flex min-h-[40vh] items-center justify-center"><Spinner size="lg" label="Loading users..." /></div>;
+  return <div className="flex flex-col gap-6"><div><h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Manage Users</h1><p className="mt-1 text-xs text-zinc-500">Update roles or remove user accounts.</p></div>{error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</p>}<Card className="overflow-hidden border border-zinc-200 dark:border-zinc-800"><Table aria-label="Platform users"><Table.ScrollContainer><Table.Content><Table.Header><Table.Column isRowHeader>User</Table.Column><Table.Column>Email</Table.Column><Table.Column>Role</Table.Column><Table.Column>Credits</Table.Column><Table.Column>Actions</Table.Column></Table.Header><Table.Body items={users}>{(user) => <Table.Row key={user._id}><Table.Cell><div className="flex items-center gap-3"><Avatar size="sm"><Avatar.Image src={user.photoURL} alt={user.name} /><Avatar.Fallback>{user.name?.[0]}</Avatar.Fallback></Avatar><span className="font-semibold">{user.name}</span></div></Table.Cell><Table.Cell>{user.email}</Table.Cell><Table.Cell><select aria-label={`Role for ${user.name}`} value={user.role} disabled={busy === user._id} onChange={(event) => updateRole(user._id, event.target.value)} className="rounded-md border border-zinc-200 bg-transparent px-2 py-1 text-sm dark:border-zinc-700">{ROLES.map((role) => <option key={role}>{role}</option>)}</select></Table.Cell><Table.Cell>{user.credits}</Table.Cell><Table.Cell><Button size="sm" color="danger" variant="flat" isLoading={busy === user._id} onPress={() => remove(user._id)}>Remove</Button></Table.Cell></Table.Row>}</Table.Body></Table.Content></Table.ScrollContainer></Table></Card></div>;
 }

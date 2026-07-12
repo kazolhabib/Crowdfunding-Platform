@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import React, { useState, useEffect } from "react";
 import { Button, Card, Link, Chip } from "@heroui/react";
@@ -180,10 +181,10 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  const nextHeroSlide = () => {
+  function nextHeroSlide() {
     setHeroDirection(1);
     setHeroIndex((prev) => (prev + 1) % HERO_SLIDES.length);
-  };
+  }
 
   const prevHeroSlide = () => {
     setHeroDirection(-1);
@@ -516,7 +517,7 @@ export default function Home() {
                 className="flex flex-col items-center max-w-2xl"
               >
                 <p className="text-zinc-650 dark:text-zinc-400 text-lg lg:text-xl italic leading-relaxed mb-8">
-                  "{TESTIMONIALS[testimonialIndex].quote}"
+                  &ldquo;{TESTIMONIALS[testimonialIndex].quote}&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-blue-600/40">

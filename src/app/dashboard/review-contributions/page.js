@@ -23,7 +23,10 @@ export default function ReviewContributionsPage() {
   };
 
   useEffect(() => {
-    fetchContributions();
+    const timeoutId = setTimeout(() => {
+      void fetchContributions();
+    }, 0);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const handleAction = async (id, action) => {

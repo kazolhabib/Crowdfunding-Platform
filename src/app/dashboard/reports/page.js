@@ -1,25 +1,13 @@
 "use client";
 
-import React from "react";
-import { Card } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Spinner } from "@heroui/react";
 
 export default function ReportsPage() {
-  return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">
-          Reports
-        </h1>
-        <p className="text-zinc-500 text-xs mt-1">Platform analytics and performance reports.</p>
-      </div>
-
-      <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-        <Card.Content className="p-8">
-          <p className="text-sm text-zinc-700 dark:text-zinc-350">
-            Generate and view detailed reports on platform metrics, user growth, and funding trends.
-          </p>
-        </Card.Content>
-      </Card>
-    </div>
-  );
+  const [reports, setReports] = useState([]); const [loading, setLoading] = useState(true); const [busy, setBusy] = useState(null); const [error, setError] = useState("");
+  const load = async () => { try { const response = await fetch("/api/admin/reports"); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to load reports."); setReports(data.reports); } catch (loadError) { setError(loadError.message); } finally { setLoading(false); } };
+  useEffect(() => { const id = setTimeout(() => { void load(); }, 0); return () => clearTimeout(id); }, []);
+  const resolve = async (reportId, action) => { if (action === "delete" && !window.confirm("Delete the reported campaign? Contributors will be refunded.")) return; setBusy(reportId); setError(""); try { const response = await fetch("/api/admin/reports", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ reportId, action }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to resolve report."); setReports((items) => items.filter((report) => report._id !== reportId)); } catch (actionError) { setError(actionError.message); } finally { setBusy(null); } };
+  if (loading) return <div className="flex min-h-[40vh] items-center justify-center"><Spinner size="lg" label="Loading reports..." /></div>;
+  return <div className="flex flex-col gap-6"><div><h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Reported Campaigns</h1><p className="mt-1 text-xs text-zinc-500">Review reports and suspend or remove campaigns.</p></div>{error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</p>}{reports.length === 0 ? <Card className="border border-zinc-200 dark:border-zinc-800"><Card.Content className="p-8 text-center text-sm text-zinc-500">No reported campaigns.</Card.Content></Card> : <div className="overflow-x-auto rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"><table className="w-full text-left text-sm"><thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"><tr><th className="p-4">Reporter</th><th className="p-4">Campaign</th><th className="p-4">Reason</th><th className="p-4">Date</th><th className="p-4">Action</th></tr></thead><tbody>{reports.map((report) => <tr key={report._id} className="border-b border-zinc-100 last:border-0 dark:border-zinc-800"><td className="p-4"><p className="font-semibold text-zinc-900 dark:text-white">{report.reporter_name}</p><p className="text-xs text-zinc-500">{report.reporter_email}</p></td><td className="p-4">{report.campaign_title}</td><td className="max-w-xs p-4 text-zinc-600 dark:text-zinc-300">{report.reason}</td><td className="p-4 text-xs text-zinc-500">{new Date(report.date).toLocaleDateString()}</td><td className="p-4"><div className="flex gap-2"><Button size="sm" color="warning" variant="flat" isLoading={busy === report._id} onPress={() => resolve(report._id, "suspend")}>Suspend</Button><Button size="sm" color="danger" variant="flat" isLoading={busy === report._id} onPress={() => resolve(report._id, "delete")}>Delete</Button></div></td></tr>)}</tbody></table></div>}</div>;
 }

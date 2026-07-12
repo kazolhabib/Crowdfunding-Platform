@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import React, { useState } from "react";
 import { Card, Input, Button, Link, Select, Label, ListBox } from "@heroui/react";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import { Link, Button, Avatar, Popover, Spinner, Label } from "@heroui/react";
@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }) {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     if (!user) return;
     try {
       const res = await fetch("/api/notifications");
@@ -55,16 +55,22 @@ export default function DashboardLayout({ children }) {
     } catch (error) {
       console.error("Fetch notifications error:", error);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     if (user) {
-      fetchNotifications();
+      const timeoutId = setTimeout(() => {
+        void fetchNotifications();
+      }, 0);
       // Poll every 30 seconds
       const interval = setInterval(fetchNotifications, 30000);
-      return () => clearInterval(interval);
+      return () => {
+        clearTimeout(timeoutId);
+        clearInterval(interval);
+      };
     }
-  }, [user]);
+    return undefined;
+  }, [user, fetchNotifications]);
 
   const handleBellClick = () => {
     fetchNotifications();

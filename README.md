@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FundFlow — Crowdfunding Platform
 
-## Getting Started
+FundFlow is a role-based crowdfunding platform built with Next.js, MongoDB, HeroUI, and Stripe Checkout.
 
-First, run the development server:
+## Setup checklist
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Install dependencies: `npm install`
+2. Create `.env.local` in this project with the required values below.
+3. Install and run the companion payment server in `../crowdfunding-platform-server`.
+4. Add that server's Stripe values to its `.env` file (see its `.env.example`).
+5. Start the frontend: `npm run dev`
+
+### Frontend `.env.local`
+
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017/crowdfunding-platform
+JWT_SECRET=replace-with-a-long-random-secret
+API_URL=http://localhost:5000
+IMGBB_API_KEY=your_imgbb_api_key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Payment server `.env`
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```env
+PORT=5000
+MONGODB_URI=mongodb://127.0.0.1:27017/crowdfunding-platform
+JWT_SECRET=replace-with-the-same-long-random-secret
+FRONTEND_URL=http://localhost:3000
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+For local Stripe webhook forwarding, use:
 
-## Learn More
+```bash
+stripe listen --forward-to localhost:5000/api/payments/webhook
+```
 
-To learn more about Next.js, take a look at the following resources:
+Copy the returned `whsec_...` value into the payment server `.env`, then restart the server.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Roles
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Supporters explore campaigns, contribute platform credits, and purchase credit packages.
+- Creators submit campaigns, review contributions, and request withdrawals.
+- Admins approve campaigns, process withdrawals, manage users/campaigns, and resolve reports.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Role-based access is enforced by Next.js Proxy for dashboard navigation and by API-level authorization for admin actions.

@@ -1,25 +1,13 @@
 "use client";
 
-import React from "react";
-import { Card } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Chip, Spinner } from "@heroui/react";
 
 export default function ManageCampaignsPage() {
-  return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">
-          Manage Campaigns
-        </h1>
-        <p className="text-zinc-500 text-xs mt-1">Administer all campaigns across the platform.</p>
-      </div>
-
-      <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-        <Card.Content className="p-8">
-          <p className="text-sm text-zinc-700 dark:text-zinc-350">
-            Edit, pause, or remove campaigns. Monitor funding activity and compliance.
-          </p>
-        </Card.Content>
-      </Card>
-    </div>
-  );
+  const [campaigns, setCampaigns] = useState([]); const [loading, setLoading] = useState(true); const [busy, setBusy] = useState(null); const [error, setError] = useState("");
+  const load = async () => { try { const response = await fetch("/api/admin/campaigns"); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to load campaigns."); setCampaigns(data.campaigns); } catch (loadError) { setError(loadError.message); } finally { setLoading(false); } };
+  useEffect(() => { const id = setTimeout(() => { void load(); }, 0); return () => clearTimeout(id); }, []);
+  const remove = async (campaignId) => { if (!window.confirm("Permanently remove this campaign? All contributor credits will be refunded.")) return; setBusy(campaignId); setError(""); try { const response = await fetch(`/api/admin/campaigns?id=${campaignId}`, { method: "DELETE" }); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to remove campaign."); setCampaigns((items) => items.filter((campaign) => campaign._id !== campaignId)); } catch (actionError) { setError(actionError.message); } finally { setBusy(null); } };
+  if (loading) return <div className="flex min-h-[40vh] items-center justify-center"><Spinner size="lg" label="Loading campaigns..." /></div>;
+  return <div className="flex flex-col gap-6"><div><h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Manage Campaigns</h1><p className="mt-1 text-xs text-zinc-500">Remove campaigns when moderation requires permanent action.</p></div>{error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</p>}{campaigns.length === 0 ? <Card className="border border-zinc-200 dark:border-zinc-800"><Card.Content className="p-8 text-center text-sm text-zinc-500">No campaigns found.</Card.Content></Card> : <div className="overflow-x-auto rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"><table className="w-full text-left text-sm"><thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"><tr><th className="p-4">Campaign</th><th className="p-4">Creator</th><th className="p-4">Raised / Goal</th><th className="p-4">Status</th><th className="p-4">Action</th></tr></thead><tbody>{campaigns.map((campaign) => <tr key={campaign._id} className="border-b border-zinc-100 last:border-0 dark:border-zinc-800"><td className="p-4"><p className="font-semibold text-zinc-900 dark:text-white">{campaign.title}</p><p className="text-xs text-zinc-500">{campaign.category}</p></td><td className="p-4">{campaign.creator_name}</td><td className="p-4">{campaign.amount_raised} / {campaign.funding_goal} Cr</td><td className="p-4"><Chip size="sm" variant="flat" color={campaign.status === "approved" ? "success" : campaign.status === "pending" ? "warning" : "danger"}>{campaign.status}</Chip></td><td className="p-4"><Button size="sm" color="danger" variant="flat" isLoading={busy === campaign._id} onPress={() => remove(campaign._id)}>Delete</Button></td></tr>)}</tbody></table></div>}</div>;
 }

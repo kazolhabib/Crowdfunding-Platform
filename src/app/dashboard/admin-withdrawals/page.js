@@ -1,25 +1,13 @@
 "use client";
 
-import React from "react";
-import { Card } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Spinner } from "@heroui/react";
 
 export default function AdminWithdrawalsPage() {
-  return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">
-          Withdrawal Requests
-        </h1>
-        <p className="text-zinc-500 text-xs mt-1">Process and approve creator fund withdrawal requests.</p>
-      </div>
-
-      <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-        <Card.Content className="p-8">
-          <p className="text-sm text-zinc-700 dark:text-zinc-350">
-            Review pending withdrawal requests from campaign creators and approve payouts.
-          </p>
-        </Card.Content>
-      </Card>
-    </div>
-  );
+  const [withdrawals, setWithdrawals] = useState([]); const [loading, setLoading] = useState(true); const [processing, setProcessing] = useState(null); const [error, setError] = useState("");
+  const load = async () => { try { const response = await fetch("/api/admin/withdrawals"); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to load withdrawals."); setWithdrawals(data.withdrawals); } catch (loadError) { setError(loadError.message); } finally { setLoading(false); } };
+  useEffect(() => { const id = setTimeout(() => { void load(); }, 0); return () => clearTimeout(id); }, []);
+  const approve = async (withdrawalId) => { setProcessing(withdrawalId); setError(""); try { const response = await fetch("/api/admin/withdrawals", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ withdrawalId }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to process withdrawal."); setWithdrawals((items) => items.filter((item) => item._id !== withdrawalId)); } catch (actionError) { setError(actionError.message); } finally { setProcessing(null); } };
+  if (loading) return <div className="flex min-h-[40vh] items-center justify-center"><Spinner size="lg" label="Loading withdrawal requests..." /></div>;
+  return <div className="flex flex-col gap-6"><div><h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Withdrawal Requests</h1><p className="mt-1 text-xs text-zinc-500">Confirm completed creator payouts.</p></div>{error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</p>}{withdrawals.length === 0 ? <Card className="border border-zinc-200 dark:border-zinc-800"><Card.Content className="p-8 text-center text-sm text-zinc-500">No pending withdrawal requests.</Card.Content></Card> : <div className="overflow-x-auto rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"><table className="w-full text-left text-sm"><thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"><tr><th className="p-4">Creator</th><th className="p-4">Credits</th><th className="p-4">Payout</th><th className="p-4">Payment Details</th><th className="p-4">Requested</th><th className="p-4">Action</th></tr></thead><tbody>{withdrawals.map((item) => <tr key={item._id} className="border-b border-zinc-100 last:border-0 dark:border-zinc-800"><td className="p-4 font-semibold text-zinc-900 dark:text-white">{item.creator_name}<p className="text-xs font-normal text-zinc-500">{item.creator_email}</p></td><td className="p-4">{item.withdrawal_credit} Cr</td><td className="p-4">${item.withdrawal_amount.toFixed(2)}</td><td className="p-4 text-xs">{item.payment_system}<p className="text-zinc-500">{item.account_number}</p></td><td className="p-4 text-xs text-zinc-500">{new Date(item.withdraw_date).toLocaleDateString()}</td><td className="p-4"><Button size="sm" color="success" isLoading={processing === item._id} onPress={() => approve(item._id)}>Payment Success</Button></td></tr>)}</tbody></table></div>}</div>;
 }
