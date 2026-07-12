@@ -7,7 +7,7 @@ import { Coins, LogOut, User as UserIcon, LayoutDashboard, ChevronDown, Menu, X 
 import { FaGithub } from "react-icons/fa";
 
 export default function Navbar() {
-  const { user, login, logout, currentRole } = useAuth();
+  const { user, loginMockRole, logout, currentRole } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const gitHubUrl = "https://github.com/kazolhabib/Crowdfunding-Platform";
@@ -96,7 +96,7 @@ export default function Navbar() {
               <Dropdown.Menu
                 aria-label="Mock Session Selector"
                 variant="flat"
-                onAction={(key) => login(key)}
+                onAction={(key) => loginMockRole(key)}
               >
                 <Dropdown.Item id="Visitor" textValue="Guest/Visitor">
                   <Label className={currentRole === "Visitor" ? "text-primary font-semibold" : ""}>
