@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/User";
-import { verifyJWT } from "@/lib/auth";
+import { getAuthPayload } from "@/lib/requestAuth";
 
 const MAX_IMAGE_SIZE = 1_400_000;
 
 export async function PATCH(req) {
   try {
-    const token = req.cookies.get("token")?.value;
-    const payload = token ? await verifyJWT(token) : null;
+    const payload = await getAuthPayload(req);
 
     if (!payload?.userId) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });

@@ -45,8 +45,10 @@ export async function POST(req) {
       role: newUser.role,
     });
 
+    // Return token in body for localStorage (assessment) + set cookie for private routes
     const response = NextResponse.json({
       success: true,
+      token,
       user: {
         id: newUser._id,
         name: newUser.name,
@@ -57,7 +59,7 @@ export async function POST(req) {
       },
     });
 
-    // Set HttpOnly cookie
+    // Set HttpOnly cookie so Proxy / private routes stay logged in after reload
     response.cookies.set({
       name: "token",
       value: token,

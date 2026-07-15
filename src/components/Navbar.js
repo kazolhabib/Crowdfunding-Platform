@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Link, Button, Dropdown, Avatar, Label } from "@heroui/react";
 import { useAuth } from "@/context/AuthContext";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { usePathname } from "next/navigation";
 import {
   Coins,
   LogOut,
@@ -15,14 +16,20 @@ import {
   ArrowUpRight,
   UserRound,
   Settings,
+  Code2,
 } from "lucide-react";
 
+const CLIENT_GITHUB_REPO = "https://github.com/kazolhabib/Crowdfunding-Platform";
+
 export default function Navbar() {
+  const pathname = usePathname();
   const { user, loginMockRole, logout, currentRole } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
   const hasProfilePhoto = Boolean(user?.photoURL) && !user.photoURL.includes("images.unsplash.com");
+
+  if (pathname?.startsWith("/dashboard")) return null;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled((current) => {
@@ -50,7 +57,7 @@ export default function Navbar() {
         <span>Global projects · considered backing</span>
       </motion.div>
       <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between">
-        <div className="flex items-center gap-5 lg:gap-14">
+        <div className="flex items-center gap-5 lg:gap-10">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="grid h-10 w-10 place-items-center rounded-full border border-[#24231f]/15 text-[#24231f] transition-colors hover:bg-[#24231f] hover:text-[#f4f0e8] md:hidden"
@@ -70,31 +77,40 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-7 lg:flex">
+          <nav className="hidden items-center gap-6 lg:flex">
             <Link href="/campaigns" className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#565148] transition-colors hover:text-[#9a3412]">
-              Discover
+              Explore Campaigns
             </Link>
             {user && (
               <Link href="/dashboard" className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#565148] transition-colors hover:text-[#9a3412]">
                 Dashboard
               </Link>
             )}
-            <span className="h-4 w-px bg-[#24231f]/20" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#9a3412]">Back what matters</span>
           </nav>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
           {user && (
-            <div className="hidden items-center gap-1.5 border-r border-[#24231f]/15 pr-4 text-[11px] font-bold uppercase tracking-[0.08em] text-[#565148] xl:flex">
+            <div className="flex items-center gap-1.5 border-r border-[#24231f]/15 pr-3 text-[11px] font-bold uppercase tracking-[0.08em] text-[#565148] sm:pr-4">
               <Coins size={14} className="text-[#b45309]" />
-              {user.credits} credits
+              <span>{user.credits}</span>
+              <span className="hidden sm:inline">credits</span>
             </div>
           )}
 
+          <a
+            href={CLIENT_GITHUB_REPO}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden h-10 items-center gap-1.5 border border-[#bfb5a3] bg-[#ebe3d5] px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-[#24231f] shadow-[2px_2px_0_rgba(36,35,31,0.12)] transition-all hover:-translate-y-0.5 hover:border-[#24231f] hover:shadow-[3px_3px_0_#9a3412] md:inline-flex"
+          >
+            <Code2 size={14} className="text-[#9a3412]" />
+            Join as Developer
+          </a>
+
           <Dropdown placement="bottom-end">
             <Dropdown.Trigger>
-              <span role="button" className="hidden h-11 cursor-pointer items-center gap-2 border border-[#bfb5a3] bg-[#ebe3d5] py-1 pl-3 pr-1 text-[#24231f] shadow-[2px_2px_0_rgba(36,35,31,0.12)] transition-all hover:-translate-y-0.5 hover:border-[#24231f] hover:shadow-[3px_3px_0_#9a3412] sm:inline-flex">
+              <span role="button" className="hidden h-11 cursor-pointer items-center gap-2 border border-[#bfb5a3] bg-[#ebe3d5] py-1 pl-3 pr-1 text-[#24231f] shadow-[2px_2px_0_rgba(36,35,31,0.12)] transition-all hover:-translate-y-0.5 hover:border-[#24231f] hover:shadow-[3px_3px_0_#9a3412] xl:inline-flex">
                 <span className="grid h-6 w-6 place-items-center rounded-full bg-[#24231f] text-[9px] font-black text-[#f4f0e8]">{currentRole[0]}</span>
                 <span className="leading-none">
                   <span className="block text-[8px] font-bold uppercase tracking-[0.14em] text-[#776f63]">Viewing as</span>
@@ -122,10 +138,10 @@ export default function Navbar() {
           {!user ? (
             <div className="flex items-center gap-2">
               <Button as={Link} href="/login" variant="light" size="sm" className="hidden h-10 px-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#24231f] sm:flex">
-                Sign in
+                Login
               </Button>
               <Button as={Link} href="/register" size="sm" className="h-10 rounded-none bg-[#24231f] px-3.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f4f0e8] transition-colors hover:bg-[#9a3412] sm:px-5" endContent={<ArrowUpRight size={14} />}>
-                Start a project
+                Register
               </Button>
             </div>
           ) : (
@@ -160,12 +176,47 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="mt-3 border-t border-[#d9d1c3] bg-[#f4f0e8] pt-4 md:hidden">
           <nav className="flex flex-col border-b border-[#d9d1c3] pb-4">
-            <Link href="/campaigns" onClick={() => setIsMenuOpen(false)} className="px-1 py-3 text-xl font-serif text-[#24231f]">Discover campaigns</Link>
-            {user && <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="px-1 py-3 text-xl font-serif text-[#24231f]">Dashboard</Link>}
+            <Link href="/campaigns" onClick={() => setIsMenuOpen(false)} className="px-1 py-3 text-xl font-serif text-[#24231f]">
+              Explore Campaigns
+            </Link>
+            {user && (
+              <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="px-1 py-3 text-xl font-serif text-[#24231f]">
+                Dashboard
+              </Link>
+            )}
+            <a
+              href={CLIENT_GITHUB_REPO}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
+              className="px-1 py-3 text-xl font-serif text-[#9a3412]"
+            >
+              Join as Developer
+            </a>
           </nav>
           <div className="flex items-center justify-between py-4">
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#565148]">Viewing as {currentRole}</span>
-            {!user && <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#9a3412]">Sign in</Link>}
+            {user ? (
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#565148]">
+                <Coins size={14} className="text-[#b45309]" />
+                {user.credits} credits
+              </span>
+            ) : (
+              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#565148]">Guest</span>
+            )}
+            {!user ? (
+              <div className="flex items-center gap-4">
+                <Link href="/login" onClick={() => setIsMenuOpen(false)} className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#24231f]">
+                  Login
+                </Link>
+                <Link href="/register" onClick={() => setIsMenuOpen(false)} className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#9a3412]">
+                  Register
+                </Link>
+              </div>
+            ) : (
+              <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#9a3412]">
+                Profile
+              </Link>
+            )}
           </div>
         </div>
       )}

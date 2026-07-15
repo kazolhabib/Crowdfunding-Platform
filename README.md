@@ -16,8 +16,18 @@ Crowdfunding is a role-based crowdfunding platform built with Next.js, MongoDB, 
 MONGODB_URI=mongodb://127.0.0.1:27017/crowdfunding-platform
 JWT_SECRET=replace-with-a-long-random-secret
 API_URL=http://localhost:5000
-IMGBB_API_KEY=your_imgbb_api_key
+NEXT_PUBLIC_IMGBB_API_KEY=your_imgbb_api_key
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-oauth-web-client-id.apps.googleusercontent.com
 ```
+
+#### Google Sign-In setup
+
+1. Open [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials.
+2. Create an **OAuth 2.0 Client ID** (application type: **Web application**).
+3. Add authorized JavaScript origins: `http://localhost:3000` (and your live site URL).
+4. Copy the Client ID into `NEXT_PUBLIC_GOOGLE_CLIENT_ID` and restart `npm run dev`.
+
+After login/register, the app stores the JWT as `access-token` in **localStorage** and also sets an httpOnly cookie so private routes stay logged in after reload.
 
 ### Payment server `.env`
 

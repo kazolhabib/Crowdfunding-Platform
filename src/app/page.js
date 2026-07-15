@@ -2,21 +2,20 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React, { useState, useEffect } from "react";
-import { Button, Card, Link } from "@heroui/react";
+import { Button, Link } from "@heroui/react";
 import {
   ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  Coins,
   ShieldCheck,
-  Flame,
-  Users,
-  Award,
   Sparkles,
   TrendingUp,
   ArrowUpRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const HERO_SLIDES = [
   {
@@ -25,7 +24,6 @@ const HERO_SLIDES = [
       "Help clean energy pioneers build next-gen solar rigs and off-grid power solutions for disaster-struck zones.",
     ctaText: "Explore Tech Projects",
     ctaLink: "/campaigns?category=Tech",
-    bgGradient: "from-blue-600/20 via-indigo-600/10 to-transparent",
     image:
       "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&q=80&w=1200",
   },
@@ -35,7 +33,6 @@ const HERO_SLIDES = [
       "Support local muralists and street artists transforming grey urban spaces into visual narratives of hope.",
     ctaText: "Support Art & Murals",
     ctaLink: "/campaigns?category=Art",
-    bgGradient: "from-purple-600/20 via-pink-650/10 to-transparent",
     image:
       "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=1200",
   },
@@ -45,7 +42,6 @@ const HERO_SLIDES = [
       "Help construct gravity-powered EcoFilter kits for rural schools, securing safe drinking water for children.",
     ctaText: "Fund Health Systems",
     ctaLink: "/campaigns?category=Health",
-    bgGradient: "from-teal-650/20 via-cyan-600/10 to-transparent",
     image:
       "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=1200",
   },
@@ -66,7 +62,7 @@ const TESTIMONIALS = [
     author: "Sarah Chen",
     role: "Founder, SolarGrid",
     avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100",
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
   },
   {
     quote:
@@ -74,7 +70,7 @@ const TESTIMONIALS = [
     author: "Mark Jenkins",
     role: "Philanthropist & Supporter",
     avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
   },
   {
     quote:
@@ -82,7 +78,7 @@ const TESTIMONIALS = [
     author: "Elena Rostova",
     role: "Lead Muralist, ArtHope",
     avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100",
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200",
   },
 ];
 
@@ -144,18 +140,9 @@ const MOCK_FALLBACK_CAMPAIGNS = [
 ];
 
 export default function Home() {
-  // Hero Slider State
-  const [heroIndex, setHeroIndex] = useState(0);
-  const [heroDirection, setHeroDirection] = useState(0);
-
-  // Testimonial State
-  const [testimonialIndex, setTestimonialIndex] = useState(0);
-
-  // Campaign State
   const [campaigns, setCampaigns] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
 
-  // Fetch campaigns
   useEffect(() => {
     const loadCampaigns = async () => {
       try {
@@ -174,33 +161,6 @@ export default function Home() {
     loadCampaigns();
   }, []);
 
-  // Hero auto-slide
-  useEffect(() => {
-    const timer = setInterval(() => {
-      nextHeroSlide();
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [heroIndex]);
-
-  // Testimonial auto-slide
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTestimonialIndex((prev) => (prev + 1) % TESTIMONIALS.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  function nextHeroSlide() {
-    setHeroDirection(1);
-    setHeroIndex((prev) => (prev + 1) % HERO_SLIDES.length);
-  }
-
-  const prevHeroSlide = () => {
-    setHeroDirection(-1);
-    setHeroIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  };
-
-  // Filter campaigns by category
   const filteredCampaigns =
     activeCategory === "All"
       ? campaigns
@@ -210,7 +170,7 @@ export default function Home() {
 
   return (
     <div className="flex-1 flex flex-col justify-start">
-      {/* 1. Hero Slider Section */}
+      {/* 1. Hero Slider Section (Swiper) */}
       <section className="overflow-hidden bg-[#f4f0e8] px-5 pb-16 pt-10 text-[#24231f] sm:px-8 lg:px-12 lg:pb-24">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-10 flex items-center justify-between border-y border-[#cfc6b7] py-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#6b6459]">
@@ -247,28 +207,74 @@ export default function Home() {
 
             <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
               <div className="absolute -right-5 -top-5 hidden h-28 w-28 rounded-full border border-[#b9ac99] lg:block" />
-              <AnimatePresence initial={false} custom={heroDirection} mode="wait">
-                <motion.article key={heroIndex} custom={heroDirection} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.45 }} className="relative overflow-hidden bg-[#24231f] p-3 shadow-[18px_18px_0_#d8cfbf]">
-                  <div className="relative aspect-[4/5] overflow-hidden sm:aspect-[5/4] lg:aspect-[4/5]">
-                    <img src={HERO_SLIDES[heroIndex].image} alt="Featured campaign" className="h-full w-full object-cover grayscale-[15%] transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
-                      <div className="flex items-center justify-between border-b border-white/35 pb-3 text-[10px] font-bold uppercase tracking-[0.16em]">
-                        <span>Featured story / 0{heroIndex + 1}</span><span>Open now</span>
-                      </div>
-                      <h2 className="mt-4 max-w-md font-serif text-3xl leading-[0.94] tracking-[-0.055em] sm:text-4xl">{HERO_SLIDES[heroIndex].title}</h2>
-                      <Link href={HERO_SLIDES[heroIndex].ctaLink} className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-white hover:text-[#e8c67a]">View campaign <ArrowRight size={15} /></Link>
-                    </div>
-                  </div>
-                </motion.article>
-              </AnimatePresence>
+              <div className="hero-swiper relative overflow-hidden bg-[#24231f] p-3 shadow-[18px_18px_0_#d8cfbf]">
+                <Swiper
+                  modules={[Autoplay, Navigation, Pagination]}
+                  spaceBetween={0}
+                  slidesPerView={1}
+                  loop
+                  autoplay={{ delay: 6000, disableOnInteraction: false }}
+                  navigation={{
+                    nextEl: ".hero-next",
+                    prevEl: ".hero-prev",
+                  }}
+                  pagination={{
+                    el: ".hero-pagination",
+                    clickable: true,
+                    bulletClass: "hero-bullet",
+                    bulletActiveClass: "hero-bullet-active",
+                  }}
+                  className="w-full"
+                >
+                  {HERO_SLIDES.map((slide, index) => (
+                    <SwiperSlide key={slide.title}>
+                      <article className="relative aspect-[4/5] overflow-hidden sm:aspect-[5/4] lg:aspect-[4/5]">
+                        <img
+                          src={slide.image}
+                          alt={slide.title}
+                          className="h-full w-full object-cover grayscale-[15%] transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+                        <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
+                          <div className="flex items-center justify-between border-b border-white/35 pb-3 text-[10px] font-bold uppercase tracking-[0.16em]">
+                            <span>Featured story / 0{index + 1}</span>
+                            <span>Open now</span>
+                          </div>
+                          <h2 className="mt-4 max-w-md font-serif text-3xl leading-[0.94] tracking-[-0.055em] sm:text-4xl">
+                            {slide.title}
+                          </h2>
+                          <p className="mt-3 max-w-md text-sm leading-6 text-white/80 line-clamp-2">
+                            {slide.description}
+                          </p>
+                          <Link
+                            href={slide.ctaLink}
+                            className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-white hover:text-[#e8c67a]"
+                          >
+                            {slide.ctaText} <ArrowRight size={15} />
+                          </Link>
+                        </div>
+                      </article>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
               <div className="mt-7 flex items-center justify-between">
+                <div className="hero-pagination flex gap-2" />
                 <div className="flex gap-2">
-                  {HERO_SLIDES.map((_, index) => <button key={index} onClick={() => setHeroIndex(index)} aria-label={`Go to slide ${index + 1}`} className={`h-2 transition-all ${index === heroIndex ? "w-10 bg-[#9a3412]" : "w-2 bg-[#b9ac99] hover:bg-[#24231f]"}`} />)}
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={prevHeroSlide} className="grid h-10 w-10 place-items-center border border-[#24231f]/30 transition-colors hover:bg-[#24231f] hover:text-[#f4f0e8]" aria-label="Previous slide"><ChevronLeft size={18} /></button>
-                  <button onClick={nextHeroSlide} className="grid h-10 w-10 place-items-center border border-[#24231f]/30 transition-colors hover:bg-[#24231f] hover:text-[#f4f0e8]" aria-label="Next slide"><ChevronRight size={18} /></button>
+                  <button
+                    type="button"
+                    className="hero-prev grid h-10 w-10 place-items-center border border-[#24231f]/30 transition-colors hover:bg-[#24231f] hover:text-[#f4f0e8]"
+                    aria-label="Previous slide"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    className="hero-next grid h-10 w-10 place-items-center border border-[#24231f]/30 transition-colors hover:bg-[#24231f] hover:text-[#f4f0e8]"
+                    aria-label="Next slide"
+                  >
+                    ›
+                  </button>
                 </div>
               </div>
             </div>
@@ -276,16 +282,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Featured Campaign Collection */}
+      {/* 2. Top Funded Campaigns */}
       <section className="bg-[#24231f] px-5 py-20 text-[#f7f0e3] sm:px-8 lg:px-12 lg:py-28">
         <div className="mx-auto max-w-[1440px]">
           <div className="flex flex-col gap-8 border-b border-white/15 pb-10 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#e8c67a]"><TrendingUp size={14} />The featured collection</p>
+              <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#e8c67a]"><TrendingUp size={14} />Top funded campaigns</p>
               <h2 className="mt-5 font-serif text-5xl leading-[0.9] tracking-[-0.07em] sm:text-6xl lg:text-7xl">Ideas with<br /><em className="font-normal text-[#d78b63]">real momentum.</em></h2>
             </div>
             <div className="max-w-sm lg:text-right">
-              <p className="text-sm leading-6 text-[#c7beb0]">A considered selection of independent projects gathering the strongest support from our community.</p>
+              <p className="text-sm leading-6 text-[#c7beb0]">The top campaigns that have raised the most platform credits from our community.</p>
               <Link href="/campaigns" className="mt-5 inline-flex items-center gap-2 border-b border-[#e8c67a] pb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#e8c67a] transition-colors hover:border-white hover:text-white">View all campaigns <ArrowRight size={14} /></Link>
             </div>
           </div>
@@ -338,7 +344,7 @@ export default function Home() {
                       <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
                         <div className="mb-4 flex items-end justify-between gap-3 border-b border-white/25 pb-3">
                           <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#e8c67a]">{percent}% funded</span>
-                          <span className="text-[10px] font-semibold text-white/80">{camp.amount_raised.toLocaleString()} Cr</span>
+                          <span className="text-[10px] font-semibold text-white/80">{camp.amount_raised.toLocaleString()} Cr raised</span>
                         </div>
                         <h3 className={`font-serif leading-[0.95] tracking-[-0.05em] text-white ${index === 0 ? "text-3xl sm:text-5xl" : "text-2xl"}`}>{camp.title}</h3>
                         <div className="mt-5 flex items-center justify-between gap-3 text-[10px] font-bold uppercase tracking-[0.12em] text-white/75">
@@ -358,11 +364,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. The Crowdfunding Process */}
+      {/* 3. How It Works */}
       <section className="overflow-hidden bg-[#fdfaf4] px-5 py-20 text-[#24231f] sm:px-8 lg:px-12 lg:py-28">
         <div className="mx-auto grid max-w-[1440px] gap-14 lg:grid-cols-[0.82fr_1.18fr] lg:gap-24">
           <div className="lg:sticky lg:top-32 lg:h-fit">
-            <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a3412]"><Sparkles size={14} />A clear path to impact</p>
+            <p className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a3412]"><Sparkles size={14} />How it works</p>
             <h2 className="mt-5 max-w-md font-serif text-5xl leading-[0.88] tracking-[-0.07em] sm:text-6xl">Built for<br /><em className="font-normal text-[#9a3412]">belief.</em></h2>
             <p className="mt-7 max-w-sm text-sm leading-7 text-[#665e53]">From the first promise to a funded idea, every step is designed to make backing work feel transparent, personal and direct.</p>
             <div className="mt-10 flex items-center gap-4">
@@ -416,7 +422,7 @@ export default function Home() {
       <section className="bg-[#9a3412] px-5 py-20 text-[#f7f0e3] sm:px-8 lg:px-12 lg:py-24">
         <div className="mx-auto max-w-[1440px]">
           <div className="flex flex-col justify-between gap-6 border-b border-[#f7f0e3]/35 pb-8 lg:flex-row lg:items-end">
-            <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#f2c79c]">The reach of belief</p><h2 className="mt-4 font-serif text-5xl tracking-[-0.07em] sm:text-6xl">Impact, in motion.</h2></div>
+            <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#f2c79c]">Platform impact in numbers</p><h2 className="mt-4 font-serif text-5xl tracking-[-0.07em] sm:text-6xl">Impact, in motion.</h2></div>
             <p className="max-w-sm text-sm leading-6 text-[#f7dfc4]">A growing network of creators and supporters directing resources toward work with real-world potential.</p>
           </div>
           <div className="grid divide-y divide-[#f7f0e3]/25 md:grid-cols-3 md:divide-x md:divide-y-0">
@@ -430,33 +436,72 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Community Notes */}
+      {/* 5. Testimonials (Swiper) */}
       <section className="bg-[#f7f0e3] px-5 py-20 text-[#24231f] sm:px-8 lg:px-12 lg:py-28">
         <div className="mx-auto grid max-w-[1200px] gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
-          <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a3412]">In their own words</p><h2 className="mt-5 font-serif text-5xl leading-[0.88] tracking-[-0.07em]">People make<br /><em className="font-normal text-[#9a3412]">possibility.</em></h2></div>
-          <div className="border-t border-[#cfc2af] pt-7">
-            <AnimatePresence mode="wait">
-              <motion.div key={testimonialIndex} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.35 }}>
-                <span className="font-serif text-7xl leading-none text-[#9a3412]">“</span>
-                <p className="-mt-6 max-w-2xl font-serif text-3xl leading-[1.06] tracking-[-0.045em] sm:text-4xl">{TESTIMONIALS[testimonialIndex].quote}</p>
-                <div className="mt-9 flex items-center justify-between border-t border-[#cfc2af] pt-5">
-                  <div><p className="font-bold text-[#24231f]">{TESTIMONIALS[testimonialIndex].author}</p><p className="mt-1 text-[10px] font-bold uppercase tracking-[0.13em] text-[#786f63]">{TESTIMONIALS[testimonialIndex].role}</p></div>
-                  <span className="grid h-11 w-11 place-items-center rounded-full bg-[#24231f] font-serif text-base text-[#f2c79c]">{TESTIMONIALS[testimonialIndex].author.split(" ").map((name) => name[0]).join("")}</span>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-            <div className="mt-8 flex gap-2">{TESTIMONIALS.map((_, idx) => <button key={idx} onClick={() => setTestimonialIndex(idx)} aria-label={`Go to testimonial ${idx + 1}`} className={`h-1.5 transition-all ${idx === testimonialIndex ? "w-10 bg-[#9a3412]" : "w-4 bg-[#cfc2af] hover:bg-[#786f63]"}`} />)}</div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#9a3412]">In their own words</p>
+            <h2 className="mt-5 font-serif text-5xl leading-[0.88] tracking-[-0.07em]">People make<br /><em className="font-normal text-[#9a3412]">possibility.</em></h2>
+          </div>
+          <div className="testimonial-swiper w-full min-w-0 border-t border-[#cfc2af] pt-7">
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              spaceBetween={24}
+              slidesPerView={1}
+              autoHeight
+              loop
+              watchOverflow
+              observer
+              observeParents
+              autoplay={{ delay: 5000, disableOnInteraction: false }}
+              pagination={{ clickable: true }}
+              className="testimonial-swiper-instance w-full"
+            >
+              {TESTIMONIALS.map((item) => (
+                <SwiperSlide key={item.author} className="!h-auto">
+                  <div className="pb-2">
+                    <span className="font-serif text-7xl leading-none text-[#9a3412]">“</span>
+                    <p className="-mt-6 max-w-2xl font-serif text-3xl leading-[1.06] tracking-[-0.045em] sm:text-4xl">
+                      {item.quote}
+                    </p>
+                    <div className="mt-9 flex items-center gap-4 border-t border-[#cfc2af] pt-5">
+                      <img
+                        src={item.avatar}
+                        alt={item.author}
+                        className="h-14 w-14 shrink-0 rounded-full object-cover border-2 border-[#9a3412]/30 shadow-sm"
+                      />
+                      <div>
+                        <p className="font-bold text-[#24231f]">{item.author}</p>
+                        <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.13em] text-[#786f63]">{item.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
       </section>
 
-      {/* 6. Bottom CTA */}
+      {/* 6. Bottom CTA (extra section) */}
       <section className="bg-[#f7f0e3] px-5 pb-20 sm:px-8 lg:px-12 lg:pb-28">
         <div className="mx-auto max-w-[1440px] overflow-hidden bg-[#24231f] px-6 py-14 text-[#f7f0e3] sm:px-10 lg:grid lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16 lg:px-16 lg:py-20">
-          <div><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#e8c67a]">Start where you are</p><h2 className="mt-5 max-w-3xl font-serif text-5xl leading-[0.88] tracking-[-0.07em] sm:text-6xl lg:text-7xl">Make room for<br /><em className="font-normal text-[#d78b63]">the remarkable.</em></h2><p className="mt-7 max-w-xl text-sm leading-7 text-[#c7beb0]">Whether you are shaping a new idea or looking for one to stand behind, there is a place for you here.</p></div>
-          <div className="mt-10 flex flex-col gap-3 lg:mt-0"><Button as={Link} href="/register" size="lg" className="h-12 rounded-none bg-[#f7f0e3] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24231f] hover:bg-[#e8c67a]" endContent={<ArrowUpRight size={15} />}>Create your account</Button><Link href="/campaigns" className="border-b border-white/25 py-3 text-center text-[10px] font-bold uppercase tracking-[0.14em] text-[#f7f0e3] transition-colors hover:border-[#e8c67a] hover:text-[#e8c67a]">Explore campaigns</Link></div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#e8c67a]">Start where you are</p>
+            <h2 className="mt-5 max-w-3xl font-serif text-5xl leading-[0.88] tracking-[-0.07em] sm:text-6xl lg:text-7xl">Make room for<br /><em className="font-normal text-[#d78b63]">the remarkable.</em></h2>
+            <p className="mt-7 max-w-xl text-sm leading-7 text-[#c7beb0]">Whether you are shaping a new idea or looking for one to stand behind, there is a place for you here.</p>
+          </div>
+          <div className="mt-10 flex flex-col gap-3 lg:mt-0">
+            <Button as={Link} href="/register" size="lg" className="h-12 rounded-none bg-[#f7f0e3] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24231f] hover:bg-[#e8c67a]" endContent={<ArrowUpRight size={15} />}>
+              Create your account
+            </Button>
+            <Link href="/campaigns" className="border-b border-white/25 py-3 text-center text-[10px] font-bold uppercase tracking-[0.14em] text-[#f7f0e3] transition-colors hover:border-[#e8c67a] hover:text-[#e8c67a]">
+              Explore campaigns
+            </Link>
+          </div>
         </div>
       </section>
+
     </div>
   );
 }

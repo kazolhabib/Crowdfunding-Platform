@@ -6,6 +6,9 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, LogIn } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
+import { GoogleLogin } from "@react-oauth/google";
+
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
 
 export default function LoginPage() {
   const { login, loginGoogle } = useAuth();
@@ -16,8 +19,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Live email validation
-  const validateEmail = (value) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
+  const validateEmail = (value) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
   const isEmailInvalid = email !== "" && !validateEmail(email);
 
   const handleSubmit = async (e) => {
@@ -40,17 +42,16 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSuccess = async (credentialResponse) => {
+    if (!credentialResponse?.credential) {
+      setError("Google Sign-In did not return a credential. Please try again.");
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
-      // Simulate Google OAuth login by invoking API
-      await loginGoogle(
-        "google-user@demo.com",
-        "Google Supporter",
-        "",
-        "Supporter"
-      );
+      await loginGoogle({ googleCredential: credentialResponse.credential });
       router.push("/dashboard");
       router.refresh();
     } catch (err) {
@@ -58,6 +59,10 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleError = () => {
+    setError("Google Sign-In was cancelled or failed. Please try again.");
   };
 
   return (
@@ -126,15 +131,34 @@ export default function LoginPage() {
               </span>
             </div>
 
-            <Button
-              type="button"
-              variant="bordered"
-              className="w-full font-semibold border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 h-11"
-              onClick={handleGoogleSignIn}
-              startContent={<FaGoogle size={16} className="text-red-500" />}
-            >
-              Google Account
-            </Button>
+            {googleClientId ? (
+              <div className="flex w-full justify-center min-h-[44px]">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  useOneTap={false}
+                  theme="outline"
+                  size="large"
+                  text="continue_with"
+                  shape="rectangular"
+                  width="360"
+                />
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="bordered"
+                className="w-full font-semibold border-zinc-200 dark:border-zinc-800 h-11 opacity-80"
+                startContent={<FaGoogle size={16} className="text-red-500" />}
+                onClick={() =>
+                  setError(
+                    "Google Sign-In is not configured. Add NEXT_PUBLIC_GOOGLE_CLIENT_ID to .env.local (Google Cloud Console → OAuth 2.0 Client ID)."
+                  )
+                }
+              >
+                Google Account
+              </Button>
+            )}
           </form>
 
           <p className="text-center text-sm text-zinc-550 mt-8">

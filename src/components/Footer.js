@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { Link } from "@heroui/react";
+import { usePathname } from "next/navigation";
 import { FaGithub, FaLinkedin, FaFacebook } from "react-icons/fa";
 import { ArrowUp } from "lucide-react";
 
@@ -16,13 +19,16 @@ const companyLinks = [
 ];
 
 const socials = [
-  { href: "https://linkedin.com", label: "LinkedIn", Icon: FaLinkedin },
-  { href: "https://github.com/kazolhabib/Crowdfunding-Platform", label: "GitHub", Icon: FaGithub },
-  { href: "https://facebook.com", label: "Facebook", Icon: FaFacebook },
+  { href: "https://www.linkedin.com/in/kazol-habib", label: "LinkedIn", Icon: FaLinkedin },
+  { href: "https://github.com/kazolhabib", label: "GitHub", Icon: FaGithub },
+  { href: "https://www.facebook.com/kazollhabib/", label: "Facebook", Icon: FaFacebook },
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  if (pathname?.startsWith("/dashboard")) return null;
 
   return (
     <footer className="mt-auto bg-[#171713] px-5 pt-16 pb-8 text-[#f7f0e3] sm:px-8 lg:px-12 lg:pt-20">

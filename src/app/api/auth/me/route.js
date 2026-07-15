@@ -1,20 +1,15 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/User";
-import { verifyJWT } from "@/lib/auth";
+import { getAuthPayload } from "@/lib/requestAuth";
 
 export async function GET(req) {
   try {
     await connectDB();
-    const token = req.cookies.get("token")?.value;
+    const payload = await getAuthPayload(req);
 
-    if (!token) {
-      return NextResponse.json({ success: false, error: "Not authenticated" }, { status: 401 });
-    }
-
-    const payload = await verifyJWT(token);
     if (!payload || !payload.userId) {
-      return NextResponse.json({ success: false, error: "Invalid token" }, { status: 401 });
+      return NextResponse.json({ success: false, error: "Not authenticated" }, { status: 401 });
     }
 
     const user = await User.findById(payload.userId).select("-password");

@@ -19,16 +19,16 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
 
   // Live email validation
-  const validateEmail = (value) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
+  const validateEmail = (value) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i);
   const isEmailInvalid = email !== "" && !validateEmail(email);
 
   // Password strength calculation
   const getPasswordStrength = (pass) => {
-    if (!pass) return { score: 0, label: "None", color: "bg-zinc-200" };
+    if (!pass) return { score: 0, label: "None", color: "bg-zinc-200", text: "text-zinc-400" };
     let score = 0;
     if (pass.length >= 6) score += 1;
     if (pass.length >= 8) score += 1;
-    if (/\d/.test(pass)) score += 1;
+    if (/[A-Za-z]/.test(pass) && /\d/.test(pass)) score += 1;
     if (/[!@#$%^&*(),.?":{}|<>]/.test(pass)) score += 1;
 
     if (score <= 1) return { score, label: "Weak", color: "bg-red-500", text: "text-red-500" };
@@ -38,6 +38,7 @@ export default function RegisterPage() {
   };
 
   const strength = getPasswordStrength(password);
+  const isPasswordWeak = password !== "" && (password.length < 6 || strength.score < 2);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +48,10 @@ export default function RegisterPage() {
     }
     if (password.length < 6) {
       setError("Password must be at least 6 characters long.");
+      return;
+    }
+    if (strength.score < 2) {
+      setError("Password is too weak. Use at least 8 characters, or mix letters and numbers.");
       return;
     }
 
@@ -127,11 +132,18 @@ export default function RegisterPage() {
                 isRequired
                 type="password"
                 label="Password"
-                placeholder="Enter password (min 6 characters)"
+                placeholder="Min 6 chars · mix letters & numbers"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                isInvalid={isPasswordWeak}
+                errorMessage={
+                  isPasswordWeak
+                    ? "Use at least 6 characters; stronger passwords mix letters and numbers."
+                    : undefined
+                }
                 startContent={<Lock className="text-zinc-450" size={18} />}
                 variant="bordered"
+                color={isPasswordWeak ? "danger" : "default"}
               />
               {password && (
                 <div className="px-1 flex flex-col gap-1">
