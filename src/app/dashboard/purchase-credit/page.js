@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { Card, Button, Spinner } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { CheckCircle, CreditCard } from "lucide-react";
+import { CheckCircle, CreditCard, Coins } from "lucide-react";
 
 const PACKAGES = [
   { id: "tier1", credits: 100, amountUsd: 10, popular: false },
@@ -87,26 +87,28 @@ function PurchaseCreditContent() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">
+        <h1 className="font-serif text-3xl tracking-[-0.04em] text-[#24231f]">
           Purchase Credit
         </h1>
-        <p className="text-zinc-500 text-xs mt-1">
+        <p className="text-[#645d52] text-xs font-bold uppercase tracking-[0.14em] mt-1">
           Buy credits securely via Stripe to support your favorite campaigns.
         </p>
       </div>
 
       {message && (
-        <Card className="border border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-950/30">
-          <Card.Content className="p-4 flex items-center gap-3 text-sm text-green-700 dark:text-green-300">
-            <CheckCircle size={18} />
+        <Card className="border border-green-200 bg-green-50/50 rounded-none shadow-[2px_2px_0_#24231f]">
+          <Card.Content className="p-4 flex items-center gap-3 text-xs font-bold uppercase tracking-wider text-green-700">
+            <CheckCircle size={16} />
             {message}
           </Card.Content>
         </Card>
       )}
 
       {error && (
-        <Card className="border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30">
-          <Card.Content className="p-4 text-sm text-red-700 dark:text-red-300">{error}</Card.Content>
+        <Card className="border border-red-200 bg-red-50/50 rounded-none shadow-[2px_2px_0_#24231f]">
+          <Card.Content className="p-4 text-xs font-bold uppercase tracking-wider text-red-700">
+            {error}
+          </Card.Content>
         </Card>
       )}
 
@@ -114,35 +116,34 @@ function PurchaseCreditContent() {
         {PACKAGES.map((pkg) => (
           <Card
             key={pkg.id}
-            className={`border bg-white dark:bg-zinc-900 shadow-sm relative overflow-hidden ${
+            className={`border rounded-none relative overflow-hidden bg-[#fdfaf4] ${
               pkg.popular
-                ? "border-indigo-300 dark:border-indigo-700 ring-2 ring-indigo-500/20"
-                : "border-zinc-200 dark:border-zinc-800"
+                ? "border-[#9a3412] shadow-[6px_6px_0_#24231f]"
+                : "border-[#bfb5a3] shadow-[4px_4px_0_#24231f]"
             }`}
           >
             {pkg.popular && (
-              <div className="absolute top-0 right-0 bg-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">
+              <div className="absolute top-0 right-0 bg-[#9a3412] text-[#f7f0e3] text-[9px] font-bold px-3 py-1 uppercase tracking-wider">
                 Best Value
               </div>
             )}
             <Card.Content className="p-6 flex flex-col items-center gap-4 text-center">
-              <div className="p-3 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400">
-                <CreditCard size={24} />
+              <div className="p-3 bg-[#ebe3d5] text-[#9a3412] border border-[#bfb5a3] rounded-none">
+                <Coins size={24} />
               </div>
               <div>
-                <p className="text-3xl font-extrabold text-zinc-900 dark:text-white">
+                <p className="font-serif text-4xl tracking-[-0.04em] text-[#24231f]">
                   {pkg.credits}
                 </p>
-                <p className="text-xs text-zinc-500 font-semibold uppercase tracking-wider mt-1">
+                <p className="text-[#645d52] text-[10px] font-bold uppercase tracking-wider mt-1">
                   Credits
                 </p>
               </div>
-              <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+              <p className="font-serif text-2xl text-[#9a3412]">
                 ${pkg.amountUsd}
               </p>
               <Button
-                color="primary"
-                className="w-full font-semibold"
+                className="w-full h-11 bg-[#9a3412] hover:bg-[#b45309] text-[#f7f0e3] font-bold uppercase tracking-wider text-xs rounded-none transition-all shadow-[2px_2px_0_#24231f]"
                 isLoading={loading === pkg.id}
                 onPress={() => handlePurchase(pkg.id)}
               >
@@ -161,7 +162,7 @@ export default function PurchaseCreditPage() {
     <Suspense
       fallback={
         <div className="flex items-center justify-center min-h-[40vh]">
-          <Spinner size="lg" color="primary" label="Loading..." />
+          <Spinner size="lg" color="warning" label="Loading packages..." />
         </div>
       }
     >

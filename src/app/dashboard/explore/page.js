@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Button, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { Calendar, Target, TrendingUp } from "lucide-react";
+import { Calendar, Target, TrendingUp, ArrowRight } from "lucide-react";
 
 export default function ExplorePage() {
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function ExplorePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <Spinner size="lg" color="primary" label="Loading campaigns..." />
+        <Spinner size="lg" color="warning" label="Loading campaigns..." />
       </div>
     );
   }
@@ -37,17 +37,17 @@ export default function ExplorePage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">
+        <h1 className="font-serif text-3xl tracking-[-0.04em] text-[#24231f]">
           Explore Campaigns
         </h1>
-        <p className="text-zinc-500 text-xs mt-1">
+        <p className="text-[#645d52] text-xs font-bold uppercase tracking-[0.14em] mt-1">
           Discover active campaigns and support innovative projects.
         </p>
       </div>
 
       {campaigns.length === 0 ? (
-        <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-          <Card.Content className="p-8 text-center text-sm text-zinc-500">
+        <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
+          <Card.Content className="p-8 text-center text-xs font-bold uppercase tracking-wider text-[#776f63]">
             No active campaigns available right now. Check back soon!
           </Card.Content>
         </Card>
@@ -61,10 +61,10 @@ export default function ExplorePage() {
             return (
               <Card
                 key={camp._id}
-                className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden"
+                className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none overflow-hidden hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#24231f] transition-all duration-200"
               >
                 {camp.image_url && (
-                  <div className="h-40 w-full bg-zinc-200 dark:bg-zinc-800">
+                  <div className="h-44 w-full bg-[#ebe3d5] border-b border-[#bfb5a3]">
                     <img
                       src={camp.image_url}
                       alt={camp.title}
@@ -74,41 +74,43 @@ export default function ExplorePage() {
                 )}
                 <Card.Content className="p-5 flex flex-col gap-4">
                   <div>
-                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white line-clamp-1">
+                    <h3 className="font-serif text-lg tracking-[-0.02em] text-[#24231f] line-clamp-1">
                       {camp.title}
                     </h3>
-                    <p className="text-xs text-zinc-500 mt-1">by {camp.creator_name}</p>
+                    <p className="text-[#645d52] text-[10px] font-bold uppercase tracking-wider mt-1">
+                      by {camp.creator_name}
+                    </p>
                   </div>
 
-                  <div className="flex flex-col gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+                  <div className="flex flex-col gap-2 text-xs font-semibold text-[#645d52]">
                     <div className="flex items-center gap-2">
-                      <Calendar size={14} className="text-zinc-400" />
+                      <Calendar size={14} className="text-[#bfb5a3]" />
                       <span>Deadline: {new Date(camp.deadline).toLocaleDateString()}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Target size={14} className="text-zinc-400" />
+                      <Target size={14} className="text-[#bfb5a3]" />
                       <span>Goal: {camp.funding_goal} Credits</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <TrendingUp size={14} className="text-zinc-400" />
+                      <TrendingUp size={14} className="text-[#bfb5a3]" />
                       <span>Raised: {camp.amount_raised} Credits ({percent}%)</span>
                     </div>
                   </div>
 
-                  <div className="h-2 w-full bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                  {/* Progress Bar */}
+                  <div className="h-2 w-full bg-[#ebe3d5] rounded-none overflow-hidden border border-[#bfb5a3]/50">
                     <div
-                      className="h-full bg-blue-600 rounded-full transition-all"
+                      className="h-full bg-[#9a3412] transition-all"
                       style={{ width: `${percent}%` }}
                     />
                   </div>
 
                   <Button
-                    color="primary"
-                    size="sm"
-                    className="font-semibold w-full"
-                    onPress={() => router.push(`/campaigns/${camp._id}`)}
+                    onClick={() => router.push(`/campaigns/${camp._id}`)}
+                    className="w-full h-11 bg-[#ebe3d5] text-[#24231f] font-bold border border-[#bfb5a3] rounded-none uppercase tracking-wider text-xs hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0_#24231f] mt-1"
                   >
                     View Details
+                    <ArrowRight size={14} />
                   </Button>
                 </Card.Content>
               </Card>

@@ -2,9 +2,9 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React, { useCallback, useEffect, useState } from "react";
-import { Button, Card, Input, Spinner } from "@heroui/react";
+import { Button, Card, Spinner } from "@heroui/react";
 import { useParams, useRouter } from "next/navigation";
-import { Calendar, CircleUserRound, Gift, Target, TrendingUp } from "lucide-react";
+import { Calendar, CircleUserRound, Gift, Target, TrendingUp, Heart } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function CampaignDetailsPage() {
@@ -73,7 +73,7 @@ export default function CampaignDetailsPage() {
       if (!response.ok) throw new Error(data.error || "Unable to submit contribution.");
       await refreshSession();
       setAmount("");
-      setMessage("Contribution submitted for the creator's review.");
+      setMessage("Contribution submitted successfully! Waiting for creator approval.");
     } catch (submitError) {
       setError(submitError.message || "Unable to submit contribution.");
     } finally {
@@ -82,11 +82,19 @@ export default function CampaignDetailsPage() {
   };
 
   if (loading) {
-    return <div className="min-h-[60vh] flex items-center justify-center"><Spinner size="lg" label="Loading campaign..." /></div>;
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Spinner size="lg" color="warning" label="Loading campaign..." />
+      </div>
+    );
   }
 
   if (!campaign) {
-    return <div className="mx-auto max-w-3xl px-4 py-16 text-center text-sm text-zinc-500">{error || "Campaign not found."}</div>;
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-16 text-center text-xs font-bold uppercase tracking-wider text-[#776f63]">
+        {error || "Campaign not found."}
+      </div>
+    );
   }
 
   const progress = Math.min(100, Math.round((campaign.amount_raised / campaign.funding_goal) * 100));
@@ -94,36 +102,149 @@ export default function CampaignDetailsPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+        {/* Main Content */}
         <section className="space-y-6">
-          {campaign.image_url && <img src={campaign.image_url} alt={campaign.title} className="h-72 w-full rounded-2xl object-cover shadow-sm sm:h-96" />}
+          {campaign.image_url && (
+            <div className="h-72 w-full border border-[#bfb5a3] bg-[#ebe3d5] rounded-none overflow-hidden shadow-[4px_4px_0_#24231f] sm:h-96">
+              <img
+                src={campaign.image_url}
+                alt={campaign.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-indigo-600">{campaign.category}</p>
-            <h1 className="mt-2 text-3xl font-extrabold text-zinc-900 dark:text-white">{campaign.title}</h1>
-            <div className="mt-4 flex flex-wrap gap-4 text-sm text-zinc-500">
-              <span className="flex items-center gap-1.5"><CircleUserRound size={16} /> Created by {campaign.creator_name}</span>
-              <span className="flex items-center gap-1.5"><Calendar size={16} /> Ends {new Date(campaign.deadline).toLocaleDateString()}</span>
+            <span className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a3412]">
+              {campaign.category}
+            </span>
+            <h1 className="mt-2 font-serif text-3xl sm:text-4xl tracking-[-0.04em] text-[#24231f]">
+              {campaign.title}
+            </h1>
+            <div className="mt-4 flex flex-wrap gap-4 text-xs font-bold uppercase tracking-wider text-[#776f63]">
+              <span className="flex items-center gap-1.5 border border-[#bfb5a3] bg-[#ebe3d5]/30 px-2.5 py-1">
+                <CircleUserRound size={14} className="text-[#bfb5a3]" />
+                by {campaign.creator_name}
+              </span>
+              <span className="flex items-center gap-1.5 border border-[#bfb5a3] bg-[#ebe3d5]/30 px-2.5 py-1">
+                <Calendar size={14} className="text-[#bfb5a3]" />
+                deadline: {new Date(campaign.deadline).toLocaleDateString()}
+              </span>
             </div>
           </div>
-          <Card className="border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+
+          <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
             <Card.Content className="p-6">
-              <h2 className="text-lg font-bold text-zinc-900 dark:text-white">About this campaign</h2>
-              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-zinc-600 dark:text-zinc-300">{campaign.story}</p>
+              <h2 className="font-serif text-lg tracking-[-0.02em] text-[#24231f] border-b border-[#cfc6b7] pb-2">
+                About this campaign
+              </h2>
+              <p className="mt-4 whitespace-pre-line text-sm leading-7 text-[#645d52] font-semibold">
+                {campaign.story}
+              </p>
             </Card.Content>
           </Card>
-          {campaign.reward_info && <Card className="border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900"><Card.Content className="p-6"><h2 className="flex items-center gap-2 text-lg font-bold text-zinc-900 dark:text-white"><Gift size={19} className="text-amber-500" /> Reward information</h2><p className="mt-3 whitespace-pre-line text-sm leading-7 text-zinc-600 dark:text-zinc-300">{campaign.reward_info}</p></Card.Content></Card>}
+
+          {campaign.reward_info && (
+            <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
+              <Card.Content className="p-6">
+                <h2 className="flex items-center gap-2 font-serif text-lg tracking-[-0.02em] text-[#24231f] border-b border-[#cfc6b7] pb-2">
+                  <Gift size={19} className="text-[#b45309]" />
+                  Reward Information
+                </h2>
+                <p className="mt-4 whitespace-pre-line text-sm leading-7 text-[#645d52] font-semibold">
+                  {campaign.reward_info}
+                </p>
+              </Card.Content>
+            </Card>
+          )}
         </section>
 
+        {/* Sidebar Funding Box */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <Card className="border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900"><Card.Content className="p-6">
-            <div className="flex items-end justify-between gap-3"><div><p className="text-2xl font-extrabold text-zinc-900 dark:text-white">{campaign.amount_raised} Cr</p><p className="text-xs text-zinc-500">raised of {campaign.funding_goal} Cr goal</p></div><span className="text-sm font-bold text-indigo-600">{progress}%</span></div>
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800"><div className="h-full rounded-full bg-indigo-600" style={{ width: `${progress}%` }} /></div>
-            <div className="mt-5 grid grid-cols-2 gap-3 text-xs text-zinc-500"><span className="flex items-center gap-1.5"><Target size={14} /> Goal: {campaign.funding_goal} Cr</span><span className="flex items-center gap-1.5"><TrendingUp size={14} /> Min: {campaign.minimum_contribution} Cr</span></div>
-            <form onSubmit={handleSubmit} className="mt-6 space-y-3"><Input type="number" min={campaign.minimum_contribution} step="1" label="Contribution (credits)" value={amount} onChange={(event) => setAmount(event.target.value)} isDisabled={!isActive || user?.role !== "Supporter"} /><Button type="submit" color="primary" className="w-full font-semibold" isLoading={submitting} isDisabled={!isActive || user?.role !== "Supporter"}>{isActive ? "Contribute credits" : "Campaign is no longer active"}</Button></form>
-            {user?.role === "Supporter" && <p className="mt-3 text-center text-xs text-zinc-500">Available balance: {user.credits} credits</p>}
-            {message && <p className="mt-4 text-sm text-green-600 dark:text-green-400">{message}</p>}
-            {error && <p className="mt-4 text-sm text-red-600 dark:text-red-400">{error}</p>}
-          </Card.Content></Card>
+          <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
+            <Card.Content className="p-6 flex flex-col gap-5">
+              <div>
+                <div className="flex items-end justify-between gap-3">
+                  <div>
+                    <p className="font-serif text-3xl tracking-[-0.04em] text-[#24231f]">
+                      {campaign.amount_raised} Cr
+                    </p>
+                    <p className="text-[#776f63] text-[10px] font-bold uppercase tracking-wider mt-1">
+                      raised of {campaign.funding_goal} Cr goal
+                    </p>
+                  </div>
+                  <span className="font-serif text-xl tracking-[-0.02em] text-[#9a3412]">
+                    {progress}%
+                  </span>
+                </div>
+
+                <div className="mt-4 h-2.5 overflow-hidden rounded-none border border-[#bfb5a3]/50 bg-[#ebe3d5]">
+                  <div
+                    className="h-full bg-[#9a3412]"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 text-[10px] font-bold uppercase tracking-wider text-[#645d52] border-y border-[#cfc6b7] py-3">
+                <span className="flex items-center gap-1.5">
+                  <Target size={14} className="text-[#bfb5a3]" /> Goal: {campaign.funding_goal} Cr
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <TrendingUp size={14} className="text-[#bfb5a3]" /> Min: {campaign.minimum_contribution} Cr
+                </span>
+              </div>
+
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                    Contribution (credits)
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    min={campaign.minimum_contribution}
+                    step="1"
+                    placeholder={`Min ${campaign.minimum_contribution} credits`}
+                    value={amount}
+                    onChange={(event) => setAmount(event.target.value)}
+                    className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none disabled:opacity-50"
+                    disabled={!isActive || user?.role !== "Supporter"}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full h-12 bg-[#9a3412] hover:bg-[#b45309] text-[#f7f0e3] font-bold uppercase tracking-wider text-xs rounded-none transition-all shadow-[2px_2px_0_#24231f] disabled:opacity-50"
+                  isLoading={submitting}
+                  disabled={!isActive || user?.role !== "Supporter"}
+                  startContent={!submitting && <Heart size={14} />}
+                >
+                  {isActive
+                    ? "Contribute Credits"
+                    : "Campaign is inactive"}
+                </Button>
+              </form>
+
+              {user?.role === "Supporter" && (
+                <div className="text-center text-[10px] font-bold uppercase tracking-wider text-[#776f63] border-t border-[#cfc6b7]/30 pt-3">
+                  Available balance: <span className="text-[#24231f]">{user.credits} credits</span>
+                </div>
+              )}
+
+              {message && (
+                <div className="p-3 border border-green-200 bg-green-50/50 text-green-700 text-xs font-bold uppercase tracking-wider rounded-none">
+                  {message}
+                </div>
+              )}
+              {error && (
+                <div className="p-3 border border-red-200 bg-red-50/50 text-red-700 text-xs font-bold uppercase tracking-wider rounded-none">
+                  {error}
+                </div>
+              )}
+            </Card.Content>
+          </Card>
         </aside>
       </div>
     </main>
