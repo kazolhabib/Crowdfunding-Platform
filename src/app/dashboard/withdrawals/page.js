@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, Input, Button, Spinner, Select, Label, ListBox } from "@heroui/react";
-import { DollarSign, AlertTriangle } from "lucide-react";
+import { Card, Spinner, Select, Label, ListBox } from "@heroui/react";
+import { DollarSign, AlertTriangle, Coins, History, ArrowUpRight } from "lucide-react";
 
 const PAYMENT_SYSTEMS = [
   { id: "Stripe", label: "Stripe" },
@@ -96,14 +96,14 @@ export default function WithdrawalsPage() {
   };
 
   const statusColor = (s) => {
-    if (s === "approved") return "text-green-600 bg-green-50 dark:bg-green-950/30 dark:text-green-400";
-    return "text-amber-600 bg-amber-50 dark:bg-amber-950/30 dark:text-amber-400";
+    if (s === "approved") return "text-green-700 bg-green-50/50 border-green-200";
+    return "text-amber-700 bg-amber-50/50 border-amber-200";
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <Spinner size="lg" color="primary" label="Loading withdrawal data..." />
+        <Spinner size="lg" color="warning" label="Loading withdrawal data..." />
       </div>
     );
   }
@@ -111,81 +111,94 @@ export default function WithdrawalsPage() {
   return (
     <div className="flex flex-col gap-8 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">Withdrawals</h1>
-        <p className="text-zinc-500 text-xs mt-1">
+        <h1 className="font-serif text-3xl tracking-[-0.04em] text-[#24231f]">Withdrawals</h1>
+        <p className="text-[#645d52] text-xs font-bold uppercase tracking-[0.14em] mt-1">
           Request fund withdrawals from your campaign earnings. 20 Credits = $1 USD.
         </p>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-          <Card.Content className="p-5 text-center">
-            <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Total Raised</p>
-            <span className="text-2xl font-extrabold text-zinc-900 dark:text-white">{totalRaised} Cr</span>
-            <p className="text-zinc-400 text-[10px]">${(totalRaised / 20).toFixed(2)} USD</p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
+          <Card.Content className="p-6 text-center">
+            <p className="text-[#645d52] text-[10px] font-bold uppercase tracking-[0.12em] mb-2">Total Raised</p>
+            <span className="font-serif text-3xl tracking-[-0.04em] text-[#24231f]">{totalRaised} Cr</span>
+            <p className="text-[#776f63] text-[10px] font-bold mt-1">${(totalRaised / 20).toFixed(2)} USD</p>
           </Card.Content>
         </Card>
-        <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-          <Card.Content className="p-5 text-center">
-            <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Withdrawn / Pending</p>
-            <span className="text-2xl font-extrabold text-zinc-900 dark:text-white">{totalWithdrawn} Cr</span>
-            <p className="text-zinc-400 text-[10px]">${(totalWithdrawn / 20).toFixed(2)} USD</p>
+        <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
+          <Card.Content className="p-6 text-center">
+            <p className="text-[#645d52] text-[10px] font-bold uppercase tracking-[0.12em] mb-2">Withdrawn / Pending</p>
+            <span className="font-serif text-3xl tracking-[-0.04em] text-[#24231f]">{totalWithdrawn} Cr</span>
+            <p className="text-[#776f63] text-[10px] font-bold mt-1">${(totalWithdrawn / 20).toFixed(2)} USD</p>
           </Card.Content>
         </Card>
-        <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-          <Card.Content className="p-5 text-center">
-            <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Available</p>
-            <span className="text-2xl font-extrabold text-green-600 dark:text-green-400">{availableCredits} Cr</span>
-            <p className="text-zinc-400 text-[10px]">${(availableCredits / 20).toFixed(2)} USD</p>
+        <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
+          <Card.Content className="p-6 text-center">
+            <p className="text-[#645d52] text-[10px] font-bold uppercase tracking-[0.12em] mb-2">Available</p>
+            <span className="font-serif text-3xl tracking-[-0.04em] text-[#15803d]">{availableCredits} Cr</span>
+            <p className="text-[#776f63] text-[10px] font-bold mt-1">${(availableCredits / 20).toFixed(2)} USD</p>
           </Card.Content>
         </Card>
       </div>
 
       {/* Withdrawal Form */}
-      <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
+      <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
         <Card.Content className="p-6">
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-5">Request Withdrawal</h2>
+          <h2 className="font-serif text-xl text-[#24231f] mb-5">Request Withdrawal</h2>
 
           {availableCredits < 200 && (
-            <div className="mb-5 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 text-xs font-medium border border-amber-100 dark:border-amber-900/30 flex items-center gap-2">
+            <div className="mb-5 p-4 border border-amber-200 bg-amber-50/50 text-amber-700 text-xs font-bold uppercase tracking-wider flex items-center gap-2 rounded-none">
               <AlertTriangle size={14} />
               Insufficient credits. Minimum 200 credits ($10 USD) required for withdrawal.
             </div>
           )}
 
           {error && (
-            <div className="mb-5 p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium border border-red-100 dark:border-red-900/30">
+            <div className="mb-5 p-4 border border-red-200 bg-red-50/50 text-red-700 text-xs font-bold uppercase tracking-wider rounded-none">
               {error}
             </div>
           )}
           {success && (
-            <div className="mb-5 p-3 rounded-lg bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 text-xs font-medium border border-green-100 dark:border-green-900/30">
+            <div className="mb-5 p-4 border border-green-200 bg-green-50/50 text-green-700 text-xs font-bold uppercase tracking-wider rounded-none">
               {success}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input
-                isRequired
-                type="number"
-                label="Credits to Withdraw"
-                placeholder="Min 200"
-                value={credits}
-                onChange={(e) => setCredits(e.target.value)}
-                variant="bordered"
-                min={200}
-                max={availableCredits}
-                isDisabled={availableCredits < 200}
-              />
-              <Input
-                isReadOnly
-                label="Withdraw Amount ($)"
-                value={`$${usdAmount}`}
-                variant="bordered"
-                startContent={<DollarSign size={16} className="text-green-500" />}
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                  Credits to Withdraw
+                </label>
+                <input
+                  required
+                  type="number"
+                  placeholder="Min 200"
+                  value={credits}
+                  onChange={(e) => setCredits(e.target.value)}
+                  className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none disabled:opacity-50"
+                  min={200}
+                  max={availableCredits}
+                  disabled={availableCredits < 200}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                  Withdraw Amount ($)
+                </label>
+                <div className="relative flex">
+                  <span className="inline-flex items-center px-3 border border-r-0 border-[#bfb5a3] bg-[#ebe3d5] text-[#24231f] font-bold rounded-none">
+                    $
+                  </span>
+                  <input
+                    readOnly
+                    value={usdAmount}
+                    className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#ebe3d5]/40 text-sm text-[#24231f] focus:outline-none font-bold rounded-none"
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col gap-1">
@@ -198,21 +211,21 @@ export default function WithdrawalsPage() {
                 className="w-full"
                 isDisabled={availableCredits < 200}
               >
-                <Label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1">
+                <Label className="text-xs font-bold uppercase tracking-wider text-[#565148] mb-1">
                   Payment System
                 </Label>
-                <Select.Trigger className="w-full flex items-center justify-between border border-zinc-200 dark:border-zinc-800 rounded-medium px-3 h-10 bg-transparent text-sm hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors">
+                <Select.Trigger className="w-full flex items-center justify-between border border-[#bfb5a3] bg-[#f4f0e8]/50 px-3.5 h-11 text-sm font-semibold rounded-none text-[#24231f] hover:bg-[#ebe3d5]/30 transition-all disabled:opacity-50">
                   <Select.Value />
                   <Select.Indicator />
                 </Select.Trigger>
                 <Select.Popover>
-                  <ListBox className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-medium shadow-lg p-1">
+                  <ListBox className="bg-[#fdfaf4] border border-[#bfb5a3] shadow-lg p-1 rounded-none">
                     {PAYMENT_SYSTEMS.map((ps) => (
                       <ListBox.Item
                         key={ps.id}
                         id={ps.id}
                         textValue={ps.label}
-                        className="px-3 py-2 rounded-small text-sm cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        className="px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-[#ebe3d5] text-[#24231f] rounded-none"
                       >
                         {ps.label}
                       </ListBox.Item>
@@ -222,67 +235,37 @@ export default function WithdrawalsPage() {
               </Select>
             </div>
 
-            <Input
-              isRequired
-              label="Account Number"
-              placeholder="Enter your account/wallet number"
-              value={accountNumber}
-              onChange={(e) => setAccountNumber(e.target.value)}
-              variant="bordered"
-              isDisabled={availableCredits < 200}
-            />
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                {paymentSystem === "Stripe" ? "Stripe Account Email" : "Account Number"} <span className="text-[#9a3412]">*</span>
+              </label>
+              <input
+                required
+                type={paymentSystem === "Stripe" ? "email" : "text"}
+                placeholder={paymentSystem === "Stripe" ? "e.g. stripe@yourdomain.com" : "e.g. Bkash / Nagad wallet number"}
+                value={accountNumber}
+                onChange={(e) => setAccountNumber(e.target.value)}
+                className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none disabled:opacity-50"
+                disabled={availableCredits < 200}
+              />
+            </div>
 
-            <Button
-              type="submit"
-              color="primary"
-              className="w-full font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white h-11 mt-2"
-              isLoading={submitting}
-              isDisabled={availableCredits < 200}
-            >
-              Submit Withdrawal Request
-            </Button>
+            {availableCredits < 200 ? (
+              <div className="w-full text-center py-3.5 border border-red-200 bg-red-50/50 text-red-700 font-extrabold uppercase text-xs tracking-wider rounded-none select-none">
+                Insufficient credit
+              </div>
+            ) : (
+              <Button
+                type="submit"
+                className="w-full h-12 bg-[#9a3412] hover:bg-[#b45309] text-[#f7f0e3] font-bold uppercase tracking-wider text-xs rounded-none mt-2 transition-all shadow-[2px_2px_0_#24231f]"
+                isLoading={submitting}
+              >
+                Submit Withdrawal Request
+              </Button>
+            )}
           </form>
         </Card.Content>
       </Card>
-
-      {/* Withdrawal History */}
-      {withdrawals.length > 0 && (
-        <div>
-          <h2 className="text-lg font-bold text-zinc-900 dark:text-white mb-4">Withdrawal History</h2>
-          <div className="overflow-x-auto rounded-medium border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 text-left">
-                  <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Credits</th>
-                  <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Amount</th>
-                  <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Payment</th>
-                  <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Account</th>
-                  <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Date</th>
-                  <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-                {withdrawals.map((w) => (
-                  <tr key={w._id} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                    <td className="px-4 py-3 font-semibold text-zinc-800 dark:text-white">{w.withdrawal_credit}</td>
-                    <td className="px-4 py-3 text-green-600 font-bold">${w.withdrawal_amount.toFixed(2)}</td>
-                    <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">{w.payment_system}</td>
-                    <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">{w.account_number}</td>
-                    <td className="px-4 py-3 text-zinc-500 text-xs">
-                      {new Date(w.withdraw_date).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${statusColor(w.status)}`}>
-                        {w.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

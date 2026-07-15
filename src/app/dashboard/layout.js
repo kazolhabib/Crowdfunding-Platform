@@ -26,6 +26,7 @@ import {
   UserRound,
   Users,
   Settings,
+  ListChecks,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 
@@ -124,6 +125,7 @@ export default function DashboardLayout({ children }) {
           { label: "Home", href: "/dashboard/creator", icon: Home },
           { label: "Add New Campaign", href: "/dashboard/add-campaign", icon: PlusCircle },
           { label: "My Campaigns", href: "/dashboard/my-campaigns", icon: FolderGit },
+          { label: "Contributions to Review", href: "/dashboard/review-contributions", icon: ListChecks },
           { label: "Withdrawals", href: "/dashboard/withdrawals", icon: DollarSign },
           { label: "Payment History", href: "/dashboard/creator-payments", icon: History },
         ];

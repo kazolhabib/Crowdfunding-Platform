@@ -1,8 +1,7 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 
 import React, { useState } from "react";
-import { Card, Input, Button, Link, Select, Label, ListBox } from "@heroui/react";
+import { Card, Input, Button, Select, Label, ListBox } from "@heroui/react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { PlusCircle, Upload, Image as ImageIcon } from "lucide-react";
@@ -111,40 +110,45 @@ export default function AddCampaignPage() {
   return (
     <div className="flex flex-col gap-6 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">
+        <h1 className="font-serif text-3xl tracking-[-0.04em] text-[#24231f]">
           Add New Campaign
         </h1>
-        <p className="text-zinc-500 text-xs mt-1">
+        <p className="text-[#645d52] text-xs font-bold uppercase tracking-[0.14em] mt-1">
           Fill in the details below to submit your campaign for admin review.
         </p>
       </div>
 
-      <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
+      <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
         <Card.Content className="p-8">
           {error && (
-            <div className="mb-6 p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium border border-red-100 dark:border-red-900/30">
+            <div className="mb-6 p-4 border border-red-200 bg-red-50/50 text-red-700 text-xs font-bold uppercase tracking-wider rounded-none">
               {error}
             </div>
           )}
           {success && (
-            <div className="mb-6 p-3 rounded-lg bg-green-50 dark:bg-green-950/20 text-green-600 dark:text-green-400 text-xs font-medium border border-green-100 dark:border-green-900/30">
+            <div className="mb-6 p-4 border border-green-200 bg-green-50/50 text-green-700 text-xs font-bold uppercase tracking-wider rounded-none">
               {success}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <Input
-              isRequired
-              label="Campaign Title"
-              placeholder="Enter a compelling title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              variant="bordered"
-            />
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                Campaign Title <span className="text-[#9a3412]">*</span>
+              </label>
+              <input
+                required
+                type="text"
+                placeholder="Enter a compelling title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none"
+              />
+            </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-                Campaign Story <span className="text-red-500">*</span>
+              <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                Campaign Story <span className="text-[#9a3412]">*</span>
               </label>
               <textarea
                 required
@@ -152,7 +156,7 @@ export default function AddCampaignPage() {
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
                 rows={5}
-                className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-800 rounded-medium bg-transparent text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-blue-500 resize-y transition-colors placeholder:text-zinc-400"
+                className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] resize-y transition-all font-semibold rounded-none"
               />
             </div>
 
@@ -165,21 +169,21 @@ export default function AddCampaignPage() {
                 }}
                 className="w-full"
               >
-                <Label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1">
-                  Category <span className="text-red-500">*</span>
+                <Label className="text-xs font-bold uppercase tracking-wider text-[#565148] mb-1">
+                  Category <span className="text-[#9a3412]">*</span>
                 </Label>
-                <Select.Trigger className="w-full flex items-center justify-between border border-zinc-200 dark:border-zinc-800 rounded-medium px-3 h-10 bg-transparent text-sm hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors">
+                <Select.Trigger className="w-full flex items-center justify-between border border-[#bfb5a3] bg-[#f4f0e8]/50 px-3.5 h-11 text-sm font-semibold rounded-none text-[#24231f] hover:bg-[#ebe3d5]/30 transition-all">
                   <Select.Value />
                   <Select.Indicator />
                 </Select.Trigger>
                 <Select.Popover>
-                  <ListBox className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-medium shadow-lg p-1">
+                  <ListBox className="bg-[#fdfaf4] border border-[#bfb5a3] shadow-lg p-1 rounded-none">
                     {CATEGORIES.map((cat) => (
                       <ListBox.Item
                         key={cat.id}
                         id={cat.id}
                         textValue={cat.label}
-                        className="px-3 py-2 rounded-small text-sm cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                        className="px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-[#ebe3d5] text-[#24231f] rounded-none"
                       >
                         {cat.label}
                       </ListBox.Item>
@@ -190,63 +194,84 @@ export default function AddCampaignPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input
-                isRequired
-                type="number"
-                label="Funding Goal (Credits)"
-                placeholder="e.g. 5000"
-                value={fundingGoal}
-                onChange={(e) => setFundingGoal(e.target.value)}
-                variant="bordered"
-                min={1}
-              />
-              <Input
-                isRequired
-                type="number"
-                label="Min Contribution (Credits)"
-                placeholder="e.g. 10"
-                value={minContribution}
-                onChange={(e) => setMinContribution(e.target.value)}
-                variant="bordered"
-                min={1}
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                  Funding Goal (Credits) <span className="text-[#9a3412]">*</span>
+                </label>
+                <input
+                  required
+                  type="number"
+                  placeholder="e.g. 5000"
+                  value={fundingGoal}
+                  onChange={(e) => setFundingGoal(e.target.value)}
+                  className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none"
+                  min={1}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                  Min Contribution (Credits) <span className="text-[#9a3412]">*</span>
+                </label>
+                <input
+                  required
+                  type="number"
+                  placeholder="e.g. 10"
+                  value={minContribution}
+                  onChange={(e) => setMinContribution(e.target.value)}
+                  className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none"
+                  min={1}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                Deadline <span className="text-[#9a3412]">*</span>
+              </label>
+              <input
+                required
+                type="date"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+                className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none"
               />
             </div>
 
-            <Input
-              isRequired
-              type="date"
-              label="Deadline"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-              variant="bordered"
-            />
-
-            <Input
-              label="Reward Info"
-              placeholder="Describe what backers will receive"
-              value={rewardInfo}
-              onChange={(e) => setRewardInfo(e.target.value)}
-              variant="bordered"
-            />
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
+                Reward Info
+              </label>
+              <input
+                type="text"
+                placeholder="Describe what backers will receive"
+                value={rewardInfo}
+                onChange={(e) => setRewardInfo(e.target.value)}
+                className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none"
+              />
+            </div>
 
             {/* Image upload section */}
             <div className="flex flex-col gap-3">
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">
                 Campaign Cover Image
               </label>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Input
-                  type="url"
-                  placeholder="Paste image URL or upload below"
-                  value={imageUrl}
-                  onChange={(e) => {
-                    setImageUrl(e.target.value);
-                    setImagePreview(e.target.value);
-                  }}
-                  variant="bordered"
-                  startContent={<ImageIcon size={16} className="text-zinc-400" />}
-                  className="flex-1"
-                />
+                <div className="flex-1 relative flex">
+                  <span className="inline-flex items-center px-3 border border-r-0 border-[#bfb5a3] bg-[#ebe3d5] text-[#776f63] rounded-none">
+                    <ImageIcon size={16} />
+                  </span>
+                  <input
+                    type="url"
+                    placeholder="Paste image URL or upload to the right"
+                    value={imageUrl}
+                    onChange={(e) => {
+                      setImageUrl(e.target.value);
+                      setImagePreview(e.target.value);
+                    }}
+                    className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none"
+                  />
+                </div>
                 <div className="relative">
                   <input
                     type="file"
@@ -257,17 +282,16 @@ export default function AddCampaignPage() {
                   <Button
                     type="button"
                     variant="bordered"
-                    size="sm"
-                    className="h-10 font-semibold text-xs"
+                    className="h-[46px] border border-[#bfb5a3] bg-[#ebe3d5] text-[#24231f] font-bold text-xs uppercase tracking-wider rounded-none hover:bg-[#24231f] hover:text-[#f4f0e8] transition-all"
                     isLoading={uploading}
                     startContent={!uploading && <Upload size={14} />}
                   >
-                    Upload to ImgBB
+                    Upload Image
                   </Button>
                 </div>
               </div>
               {imagePreview && (
-                <div className="relative w-full h-48 rounded-medium overflow-hidden border border-zinc-200 dark:border-zinc-800">
+                <div className="relative w-full h-48 border border-[#bfb5a3] rounded-none overflow-hidden">
                   <img
                     src={imagePreview}
                     alt="Preview"
@@ -280,10 +304,9 @@ export default function AddCampaignPage() {
 
             <Button
               type="submit"
-              color="primary"
-              className="w-full font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white h-11 mt-2"
+              className="w-full h-12 bg-[#9a3412] hover:bg-[#b45309] text-[#f7f0e3] font-bold uppercase tracking-wider text-xs rounded-none mt-2 transition-all shadow-[2px_2px_0_#24231f]"
               isLoading={loading}
-              startContent={!loading && <PlusCircle size={18} />}
+              startContent={!loading && <PlusCircle size={16} />}
             >
               Submit Campaign for Review
             </Button>

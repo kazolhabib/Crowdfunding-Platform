@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, Button, Spinner, Input } from "@heroui/react";
+import { Card, Button, Spinner } from "@heroui/react";
 import { Pencil, Trash2, X } from "lucide-react";
 
 export default function MyCampaignsPage() {
@@ -81,15 +81,15 @@ export default function MyCampaignsPage() {
   };
 
   const statusColor = (s) => {
-    if (s === "approved") return "text-green-600 bg-green-50 dark:bg-green-950/30 dark:text-green-400";
-    if (s === "rejected") return "text-red-600 bg-red-50 dark:bg-red-950/30 dark:text-red-400";
-    return "text-amber-600 bg-amber-50 dark:bg-amber-950/30 dark:text-amber-400";
+    if (s === "approved") return "text-green-700 bg-green-50/50 border-green-200";
+    if (s === "rejected") return "text-red-700 bg-red-50/50 border-red-200";
+    return "text-amber-700 bg-amber-50/50 border-amber-200";
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <Spinner size="lg" color="primary" label="Loading campaigns..." />
+        <Spinner size="lg" color="warning" label="Loading campaigns..." />
       </div>
     );
   }
@@ -97,44 +97,46 @@ export default function MyCampaignsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">My Campaigns</h1>
-        <p className="text-zinc-500 text-xs mt-1">Manage all campaigns you have created.</p>
+        <h1 className="font-serif text-3xl tracking-[-0.04em] text-[#24231f]">My Campaigns</h1>
+        <p className="text-[#645d52] text-xs font-bold uppercase tracking-[0.14em] mt-1">
+          Manage all campaigns you have created.
+        </p>
       </div>
 
       {campaigns.length === 0 ? (
-        <Card className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm">
-          <Card.Content className="p-8 text-center text-sm text-zinc-500">
+        <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none">
+          <Card.Content className="p-8 text-center text-xs font-bold uppercase tracking-wider text-[#776f63]">
             You haven&apos;t created any campaigns yet.
           </Card.Content>
         </Card>
       ) : (
-        <div className="overflow-x-auto rounded-medium border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+        <div className="overflow-x-auto rounded-none border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 text-left">
-                <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Title</th>
-                <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Category</th>
-                <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Goal</th>
-                <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Raised</th>
-                <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Deadline</th>
-                <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Status</th>
-                <th className="px-4 py-3 font-bold text-xs text-zinc-500 uppercase tracking-wider">Actions</th>
+              <tr className="bg-[#ebe3d5] border-b border-[#bfb5a3] text-left">
+                <th className="px-4 py-3 font-bold text-xs text-[#565148] uppercase tracking-[0.12em]">Title</th>
+                <th className="px-4 py-3 font-bold text-xs text-[#565148] uppercase tracking-[0.12em]">Category</th>
+                <th className="px-4 py-3 font-bold text-xs text-[#565148] uppercase tracking-[0.12em]">Goal</th>
+                <th className="px-4 py-3 font-bold text-xs text-[#565148] uppercase tracking-[0.12em]">Raised</th>
+                <th className="px-4 py-3 font-bold text-xs text-[#565148] uppercase tracking-[0.12em]">Deadline</th>
+                <th className="px-4 py-3 font-bold text-xs text-[#565148] uppercase tracking-[0.12em]">Status</th>
+                <th className="px-4 py-3 font-bold text-xs text-[#565148] uppercase tracking-[0.12em]">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+            <tbody className="divide-y divide-[#cfc6b7]/50">
               {campaigns.map((camp) => (
-                <tr key={camp._id} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                  <td className="px-4 py-3 font-semibold text-zinc-800 dark:text-white max-w-[200px] truncate">
+                <tr key={camp._id} className="hover:bg-[#ebe3d5]/30 transition-colors">
+                  <td className="px-4 py-3 font-bold text-[#24231f] max-w-[220px] truncate">
                     {camp.title}
                   </td>
-                  <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">{camp.category}</td>
-                  <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">{camp.funding_goal}</td>
-                  <td className="px-4 py-3 font-semibold text-zinc-800 dark:text-white">{camp.amount_raised}</td>
-                  <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
+                  <td className="px-4 py-3 text-[#645d52] font-semibold">{camp.category}</td>
+                  <td className="px-4 py-3 text-[#645d52] font-bold">{camp.funding_goal} Cr</td>
+                  <td className="px-4 py-3 font-extrabold text-[#9a3412]">{camp.amount_raised} Cr</td>
+                  <td className="px-4 py-3 text-[#776f63] font-medium text-xs">
                     {new Date(camp.deadline).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${statusColor(camp.status)}`}>
+                    <span className={`px-2 py-0.5 border text-[9px] font-bold uppercase rounded-none ${statusColor(camp.status)}`}>
                       {camp.status}
                     </span>
                   </td>
@@ -142,18 +144,18 @@ export default function MyCampaignsPage() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => openEdit(camp)}
-                        className="p-1.5 rounded-md hover:bg-blue-50 dark:hover:bg-blue-950/30 text-blue-600 dark:text-blue-400 cursor-pointer transition-colors"
+                        className="p-2 border border-[#bfb5a3] bg-[#ebe3d5] text-[#24231f] hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f] cursor-pointer transition-colors shadow-[1px_1px_0_#24231f]"
                         title="Edit"
                       >
-                        <Pencil size={14} />
+                        <Pencil size={13} />
                       </button>
                       <button
                         onClick={() => handleDelete(camp._id)}
                         disabled={deleting === camp._id}
-                        className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 cursor-pointer transition-colors disabled:opacity-50"
+                        className="p-2 border border-[#bfb5a3] bg-[#ebe3d5] text-red-700 hover:bg-red-750 hover:text-white hover:border-red-750 cursor-pointer transition-colors disabled:opacity-50 shadow-[1px_1px_0_#24231f]"
                         title="Delete"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={13} />
                       </button>
                     </div>
                   </td>
@@ -166,53 +168,60 @@ export default function MyCampaignsPage() {
 
       {/* Edit Modal Overlay */}
       {editCampaign && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <Card className="w-full max-w-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-fade-in">
+          <Card className="w-full max-w-lg border border-[#bfb5a3] bg-[#fdfaf4] shadow-[6px_6px_0_#24231f] rounded-none">
             <Card.Content className="p-6 flex flex-col gap-5">
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Update Campaign</h2>
+              <div className="flex justify-between items-center border-b border-[#cfc6b7] pb-3">
+                <h2 className="font-serif text-xl tracking-[-0.02em] text-[#24231f]">Update Campaign</h2>
                 <button
                   onClick={() => setEditCampaign(null)}
-                  className="p-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 cursor-pointer"
+                  className="p-1 border border-[#bfb5a3] bg-[#ebe3d5] text-[#24231f] hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f] cursor-pointer"
                 >
-                  <X size={18} />
+                  <X size={15} />
                 </button>
               </div>
 
-              <Input
-                label="Title"
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                variant="bordered"
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">Title</label>
+                <input
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none"
+                />
+              </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold text-zinc-500">Story</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">Story</label>
                 <textarea
                   value={editStory}
                   onChange={(e) => setEditStory(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2.5 border border-zinc-200 dark:border-zinc-800 rounded-medium bg-transparent text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-blue-500 resize-y transition-colors"
+                  className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] resize-y transition-all font-semibold rounded-none"
                 />
               </div>
 
-              <Input
-                label="Reward Info"
-                value={editReward}
-                onChange={(e) => setEditReward(e.target.value)}
-                variant="bordered"
-              />
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#565148]">Reward Info</label>
+                <input
+                  type="text"
+                  value={editReward}
+                  onChange={(e) => setEditReward(e.target.value)}
+                  className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none"
+                />
+              </div>
 
-              <div className="flex justify-end gap-3 mt-2">
-                <Button variant="bordered" size="sm" onClick={() => setEditCampaign(null)}>
+              <div className="flex justify-end gap-3 mt-4 pt-3 border-t border-[#cfc6b7]">
+                <Button
+                  className="rounded-none border border-[#bfb5a3] bg-[#ebe3d5] text-[#24231f] font-bold uppercase text-xs h-10 px-4 hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f]"
+                  onClick={() => setEditCampaign(null)}
+                >
                   Cancel
                 </Button>
                 <Button
-                  color="primary"
-                  size="sm"
+                  className="rounded-none bg-[#9a3412] hover:bg-[#b45309] text-[#f7f0e3] font-bold uppercase text-xs h-10 px-4"
                   onClick={handleUpdate}
                   isLoading={saving}
-                  className="font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
                 >
                   Save Changes
                 </Button>
