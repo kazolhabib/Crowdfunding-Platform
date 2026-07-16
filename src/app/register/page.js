@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Card, Input, Button, Link, Select, Label, ListBox } from "@heroui/react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { User, Mail, Lock, Image as ImageIcon, UserCheck } from "lucide-react";
+import { User, Mail, Lock, Image as ImageIcon, UserCheck, Upload } from "lucide-react";
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -13,6 +13,8 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [photoURL, setPhotoURL] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Supporter");
   const [loading, setLoading] = useState(false);
@@ -39,6 +41,36 @@ export default function RegisterPage() {
 
   const strength = getPasswordStrength(password);
   const isPasswordWeak = password !== "" && (password.length < 6 || strength.score < 2);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await fetch(
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY || "demo"}`,
+        { method: "POST", body: formData }
+      );
+      const data = await res.json();
+
+      if (data.success) {
+        setPhotoURL(data.data.url);
+        setImagePreview(data.data.url);
+      } else {
+        setError("Image upload failed. Please paste a URL instead.");
+      }
+    } catch (err) {
+      console.error("ImgBB upload error:", err);
+      setError("Image upload failed. Please paste a URL instead.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -117,15 +149,53 @@ export default function RegisterPage() {
               color={isEmailInvalid ? "danger" : "default"}
             />
 
-            <Input
-              type="url"
-              label="Profile Picture URL"
-              placeholder="https://example.com/avatar.jpg"
-              value={photoURL}
-              onChange={(e) => setPhotoURL(e.target.value)}
-              startContent={<ImageIcon className="text-zinc-450" size={18} />}
-              variant="bordered"
-            />
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+                Profile Picture URL or Upload
+              </label>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1">
+                  <Input
+                    type="url"
+                    placeholder="Paste image URL or upload to the right"
+                    value={photoURL}
+                    onChange={(e) => {
+                      setPhotoURL(e.target.value);
+                      setImagePreview(e.target.value);
+                    }}
+                    startContent={<ImageIcon className="text-zinc-450" size={18} />}
+                    variant="bordered"
+                  />
+                </div>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="bordered"
+                    className="h-10 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors rounded-medium"
+                    isLoading={uploading}
+                    startContent={!uploading && <Upload size={14} />}
+                  >
+                    Upload Image
+                  </Button>
+                </div>
+              </div>
+              {imagePreview && (
+                <div className="relative w-full h-32 border border-zinc-200 dark:border-zinc-800 rounded-medium overflow-hidden">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                    onError={() => setImagePreview("")}
+                  />
+                </div>
+              )}
+            </div>
 
             <div className="flex flex-col gap-1.5">
               <Input
