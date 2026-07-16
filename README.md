@@ -1,6 +1,26 @@
-# Crowdfunding Platform
+# FundFlow - Crowdfunding Platform
 
-Crowdfunding is a role-based crowdfunding platform built with Next.js, MongoDB, HeroUI, and Stripe Checkout.
+FundFlow is a role-based crowdfunding platform built with Next.js, MongoDB, HeroUI, and Stripe Checkout.
+
+## Project Submission Details
+* **Website Name:** FundFlow
+* **Admin Username:** `admin@demo.com`
+* **Admin Password:** `password123`
+* **Front-end Live Site Link:** [Vercel Deployment Link]
+* **Client-Side GitHub Repository:** https://github.com/kazolhabib/Crowdfunding-Platform
+* **Server-Side GitHub Repository:** https://github.com/kazolhabib/Crowdfunding-Platform-Server
+
+## Features (10 Key Bullet Points)
+1. **Role-Based Dashboards:** Tailored dashboards and views for Supporters, Creators, and Administrators.
+2. **Curated Brutalist Aesthetics:** Modern typography, HSL colors, and micro-interactions for a premium user experience.
+3. **Stripe Checkout & Payouts:** Fully integrated Stripe checkout session flow with client-side verification fallback.
+4. **Floating Notification System:** Pop-up notification center for real-time status updates (contributions, campaigns, withdrawals).
+5. **Campaign Explore & Details:** Discover active campaigns, review milestones, and back projects with confidence.
+6. **Dynamic Financial Calculations:** Automatic credit calculations for campaign backing and creator withdrawals (20 credits = $1 USD).
+7. **imgBB Image Uploading:** Seamless image uploading and real-time cover/avatar preview during registration and campaign launch.
+8. **Supporter Reporting Desk:** Reporting system for suspicious or fraudulent campaigns for safety moderation.
+9. **Admin Payout & User Control:** Approve/reject campaign requests, change user roles (Admin/Creator/Supporter), and resolve reports.
+10. **Pagination & Query Optimization:** Fast database aggregation queries and table pagination on supporter contribution logs.
 
 ## Setup checklist
 
