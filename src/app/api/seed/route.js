@@ -1,6 +1,29 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import Campaign from "@/lib/models/Campaign";
+import User from "@/lib/models/User";
+import bcrypt from "bcryptjs";
+
+const SEED_USERS = [
+  {
+    name: "Alex Admin",
+    email: "admin@demo.com",
+    role: "Admin",
+    credits: 1000,
+  },
+  {
+    name: "John Supporter",
+    email: "supporter@demo.com",
+    role: "Supporter",
+    credits: 500,
+  },
+  {
+    name: "Jane Creator",
+    email: "creator@demo.com",
+    role: "Creator",
+    credits: 200,
+  },
+];
 
 const SEED_CAMPAIGNS = [
   {
@@ -20,7 +43,7 @@ const SEED_CAMPAIGNS = [
   {
     title: "SolarGrid: Portable Solar Kits for Emergency Relief",
     story: "In areas hit by natural disasters, power grid failure cuts off communication and medical assistance. Our SolarGrid kits fold into a backpack and provide 100W of clean energy with integrated battery storage. Funding will purchase parts for our first emergency response shipment.",
-    category: "Tech",
+    category: "Technology",
     funding_goal: 8000,
     minimum_contribution: 25,
     amount_raised: 6850,
@@ -62,7 +85,7 @@ const SEED_CAMPAIGNS = [
   {
     title: "SensiArm: 3D-Printed Prosthetics for Children",
     story: "SensiArm utilizes 3D printing and open-source electronics to create high-functioning prosthetic limbs for children. Because kids grow quickly, standard prosthetics are financially out of reach. Our scalable solution cuts the cost by 95% and can be re-sized easily.",
-    category: "Tech",
+    category: "Technology",
     funding_goal: 12000,
     minimum_contribution: 30,
     amount_raised: 9200,
@@ -92,11 +115,27 @@ const SEED_CAMPAIGNS = [
 export async function GET() {
   try {
     await connectDB();
+    
+    // Seed campaigns
     await Campaign.deleteMany({});
     await Campaign.insertMany(SEED_CAMPAIGNS);
+
+    // Hash password "password123" for demo users
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash("password123", salt);
+
+    const usersToInsert = SEED_USERS.map((user) => ({
+      ...user,
+      password: hashedPassword,
+    }));
+
+    // Seed users
+    await User.deleteMany({ email: { $in: ["admin@demo.com", "supporter@demo.com", "creator@demo.com"] } });
+    await User.insertMany(usersToInsert);
+
     return NextResponse.json({
       success: true,
-      message: "Seeded 6 campaigns successfully.",
+      message: "Seeded campaigns and users successfully. Password for demo users is 'password123'.",
     });
   } catch (error) {
     console.error("Seed Error:", error);
