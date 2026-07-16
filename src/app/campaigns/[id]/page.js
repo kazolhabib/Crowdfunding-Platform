@@ -17,6 +17,9 @@ export default function CampaignDetailsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reporting, setReporting] = useState(false);
 
   const loadCampaign = useCallback(async () => {
     try {
@@ -78,6 +81,38 @@ export default function CampaignDetailsPage() {
       setError(submitError.message || "Unable to submit contribution.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleReport = async (event) => {
+    event.preventDefault();
+    if (!reportReason.trim()) {
+      setError("Please provide a reason for reporting.");
+      return;
+    }
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    setReporting(true);
+    setError("");
+    setMessage("");
+    try {
+      const response = await fetch(`/api/campaigns/${id}/report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: reportReason }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Unable to submit report.");
+      setMessage("Campaign reported successfully. Admin will review it.");
+      setReportReason("");
+      setShowReportForm(false);
+    } catch (reportError) {
+      setError(reportError.message || "Unable to submit report.");
+    } finally {
+      setReporting(false);
     }
   };
 
@@ -230,6 +265,51 @@ export default function CampaignDetailsPage() {
               {user?.role === "Supporter" && (
                 <div className="text-center text-[10px] font-bold uppercase tracking-wider text-[#776f63] border-t border-[#cfc6b7]/30 pt-3">
                   Available balance: <span className="text-[#24231f]">{user.credits} credits</span>
+                </div>
+              )}
+
+              {user && user.role === "Supporter" && (
+                <div className="mt-3 border-t border-[#cfc6b7]/30 pt-3 flex flex-col gap-2">
+                  {!showReportForm ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowReportForm(true)}
+                      className="text-center text-[10px] font-bold uppercase tracking-wider text-red-600 hover:underline cursor-pointer"
+                    >
+                      Report this campaign
+                    </button>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      <textarea
+                        placeholder="Why are you reporting this campaign?"
+                        value={reportReason}
+                        onChange={(e) => setReportReason(e.target.value)}
+                        rows={3}
+                        className="w-full px-3 py-2 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-xs text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] resize-none font-semibold rounded-none"
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={handleReport}
+                          isLoading={reporting}
+                          className="flex-1 h-8 bg-red-700 hover:bg-red-800 text-white font-bold uppercase tracking-wider text-[9px] rounded-none shadow-[1px_1px_0_#24231f]"
+                        >
+                          Submit Report
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="bordered"
+                          onClick={() => {
+                            setShowReportForm(false);
+                            setReportReason("");
+                          }}
+                          className="h-8 border border-[#bfb5a3] bg-[#ebe3d5] text-[#24231f] font-bold uppercase tracking-wider text-[9px] rounded-none"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
