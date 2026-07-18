@@ -310,8 +310,15 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12 lg:gap-5">
-            <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.25 }}
+              className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12 lg:gap-5"
+            >
               {filteredCampaigns.length > 0 ? (
                 filteredCampaigns.map((camp, index) => {
                   const percent = Math.min(100, Math.round((camp.amount_raised / camp.funding_goal) * 100));
@@ -319,12 +326,8 @@ export default function Home() {
                   const campaignImage = camp.image_url || campaignFallbackImage;
                   const cardSize = index === 0 ? "lg:col-span-6 lg:row-span-2 lg:min-h-[570px]" : index < 3 ? "lg:col-span-3 lg:min-h-[278px]" : "lg:col-span-4 lg:min-h-[340px]";
                   return (
-                    <motion.article
+                    <article
                       key={camp._id}
-                      initial={{ opacity: 0, y: 24 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -18 }}
-                      transition={{ duration: 0.38, delay: Math.min(index * 0.045, 0.16) }}
                       className={`group relative min-h-[340px] overflow-hidden bg-[#3a3832] ${cardSize}`}
                     >
                       <img
@@ -355,14 +358,14 @@ export default function Home() {
                         </div>
                         <div className="mt-3 h-px w-full bg-white/25"><div className="h-full bg-[#e8c67a] transition-all duration-500" style={{ width: `${percent}%` }} /></div>
                       </div>
-                    </motion.article>
+                    </article>
                   );
                 })
               ) : (
                 <div className="col-span-full border border-white/15 py-20 text-center text-sm text-[#c7beb0]">No campaigns found in this category.</div>
               )}
-            </AnimatePresence>
-          </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </section>
 
