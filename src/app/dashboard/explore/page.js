@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Button, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Calendar, Target, TrendingUp, ArrowRight } from "lucide-react";
 
 export default function ExplorePage() {
@@ -105,13 +106,13 @@ export default function ExplorePage() {
                     />
                   </div>
 
-                  <Button
-                    onClick={() => router.push(`/campaigns/${camp._id}`)}
+                  <Link
+                    href={`/campaigns/${camp._id}`}
                     className="w-full h-11 bg-[#ebe3d5] text-[#24231f] font-bold border border-[#bfb5a3] rounded-none uppercase tracking-wider text-xs hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0_#24231f] mt-1"
                   >
                     View Details
                     <ArrowRight size={14} />
-                  </Button>
+                  </Link>
                 </Card.Content>
               </Card>
             );

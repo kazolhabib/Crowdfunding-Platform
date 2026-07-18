@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link, Button, Dropdown, Avatar, Label } from "@heroui/react";
+import { Button, Dropdown, Avatar, Label } from "@heroui/react";
+import Link from "next/link";
+import { FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "@/context/AuthContext";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { usePathname } from "next/navigation";
 import {
   Coins,
-  LogOut,
   User as UserIcon,
   LayoutDashboard,
   ChevronDown,
@@ -29,8 +30,6 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const hasProfilePhoto = Boolean(user?.photoURL) && !user.photoURL.includes("images.unsplash.com");
 
-  if (pathname?.startsWith("/dashboard")) return null;
-
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled((current) => {
       if (latest > 80) return true;
@@ -38,6 +37,8 @@ export default function Navbar() {
       return current;
     });
   });
+
+  if (pathname?.startsWith("/dashboard")) return null;
 
   return (
     <motion.header
@@ -137,12 +138,13 @@ export default function Navbar() {
 
           {!user ? (
             <div className="flex items-center gap-2">
-              <Button as={Link} href="/login" variant="light" size="sm" className="hidden h-10 px-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#24231f] sm:flex">
+              <Link href="/login" className="hidden h-10 items-center justify-center px-3 text-[11px] font-bold uppercase tracking-[0.1em] text-[#24231f] hover:text-[#9a3412] transition-colors sm:flex">
                 Login
-              </Button>
-              <Button as={Link} href="/register" size="sm" className="h-10 rounded-none bg-[#24231f] px-3.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f4f0e8] transition-colors hover:bg-[#9a3412] sm:px-5" endContent={<ArrowUpRight size={14} />}>
-                Register
-              </Button>
+              </Link>
+              <Link href="/register" className="h-10 rounded-none bg-[#24231f] px-3.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#f4f0e8] transition-colors hover:bg-[#9a3412] sm:px-5 inline-flex items-center justify-center gap-1.5 shadow-[2px_2px_0_rgba(36,35,31,0.12)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#9a3412] border border-[#24231f]/10">
+                <span>Register</span>
+                <ArrowUpRight size={14} />
+              </Link>
             </div>
           ) : (
             <Dropdown placement="bottom-end">
@@ -165,7 +167,7 @@ export default function Navbar() {
                   <Dropdown.Item id="profile" textValue="My Profile" startContent={<UserIcon size={15} />} href="/profile" className="rounded-xl px-3 py-2.5 font-semibold text-[#24231f]"><Label>My Profile</Label></Dropdown.Item>
                   <Dropdown.Item id="dashboard" textValue="Dashboard" startContent={<LayoutDashboard size={15} />} href="/dashboard" className="rounded-xl px-3 py-2.5 font-semibold text-[#24231f]"><Label>Dashboard</Label></Dropdown.Item>
                   <Dropdown.Item id="settings" textValue="Profile settings" startContent={<Settings size={15} />} href="/profile" className="rounded-xl px-3 py-2.5 font-semibold text-[#24231f]"><Label>Profile settings</Label></Dropdown.Item>
-                  <Dropdown.Item id="logout" textValue="Logout" color="danger" className="mt-1 rounded-xl border-t border-[#e6ddcf] px-3 py-2.5 text-danger" startContent={<LogOut size={15} />} onAction={logout}><Label className="text-danger">Log Out</Label></Dropdown.Item>
+                  <Dropdown.Item id="logout" textValue="Logout" color="danger" className="mt-1 rounded-xl border-t border-[#e6ddcf] px-3 py-2.5 text-danger" startContent={<FaSignOutAlt className="shrink-0 w-[15px] h-[15px]" />} onAction={logout}><Label className="text-danger">Log Out</Label></Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown.Popover>
             </Dropdown>

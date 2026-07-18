@@ -2,7 +2,8 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React, { useState, useEffect } from "react";
-import { Button, Link } from "@heroui/react";
+import { Button } from "@heroui/react";
+import Link from "next/link";
 import {
   ArrowRight,
   ShieldCheck,
@@ -188,9 +189,10 @@ export default function Home() {
                 Crowdfunding brings discerning backers and remarkable creators together to shape the work that moves culture forward.
               </p>
               <div className="mt-10 flex flex-wrap items-center gap-5">
-                <Button as={Link} href="/campaigns" size="lg" className="h-14 rounded-none bg-[#24231f] px-6 text-xs font-bold uppercase tracking-[0.12em] text-[#f4f0e8] transition-colors hover:bg-[#9a3412]" endContent={<ArrowUpRight size={17} />}>
-                  Explore the collection
-                </Button>
+                <Link href="/campaigns" className="h-14 rounded-none bg-[#24231f] px-6 text-xs font-bold uppercase tracking-[0.12em] text-[#f4f0e8] transition-colors hover:bg-[#9a3412] inline-flex items-center justify-center gap-1.5 border border-[#24231f]">
+                  <span>Explore the collection</span>
+                  <ArrowUpRight size={17} />
+                </Link>
                 <Link href="/register" className="border-b border-[#24231f] pb-1 text-xs font-bold uppercase tracking-[0.12em] text-[#24231f] transition-colors hover:border-[#9a3412] hover:text-[#9a3412]">
                   Launch a project
                 </Link>

@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { Link } from "@heroui/react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaGithub, FaLinkedin, FaFacebook } from "react-icons/fa";
 import { ArrowUp } from "lucide-react";

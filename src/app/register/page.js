@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, Input, Button, Link, Select, Label, ListBox } from "@heroui/react";
+import { Card, Input, Button, Select, Label, ListBox } from "@heroui/react";
+import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { User, Mail, Lock, Image as ImageIcon, UserCheck, Upload } from "lucide-react";
@@ -101,73 +102,97 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center py-20 px-4 bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-black">
+    <div className="flex-1 flex items-center justify-center py-6 sm:py-8 px-4 bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-black">
       <Card className="w-full max-w-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl">
-        <Card.Content className="p-8">
-          <div className="flex flex-col items-center mb-8 text-center">
+        <Card.Content className="p-5 sm:p-6">
+          <div className="flex flex-col items-center mb-4 text-center">
             <Link
               href="/"
-              className="font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 mb-2"
+              className="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 mb-1"
             >
               Crowdfunding
             </Link>
-            <h2 className="text-xl font-bold text-zinc-800 dark:text-white">Create an account</h2>
-            <p className="text-zinc-500 text-sm mt-1">
+            <h2 className="text-lg font-bold text-zinc-800 dark:text-white">Create an account</h2>
+            <p className="text-zinc-500 text-xs mt-0.5">
               Start raising funds or backing creative ideas today
             </p>
           </div>
 
           {error && (
-            <div className="mb-6 p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium border border-red-100 dark:border-red-900/30">
+            <div className="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium border border-red-100 dark:border-red-900/30">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <Input
-              isRequired
-              type="text"
-              label="Full Name"
-              placeholder="Enter your full name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              startContent={<User className="text-zinc-450" size={18} />}
-              variant="bordered"
-            />
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+            <div className="flex flex-col gap-1 text-left">
+              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-0.5">
+                Full Name
+              </label>
+              <div className="relative">
+                <input
+                  required
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full h-10 pl-10 pr-3 border border-zinc-200 dark:border-zinc-800 bg-transparent text-sm rounded-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-zinc-100"
+                />
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                  <User size={18} />
+                </div>
+              </div>
+            </div>
 
-            <Input
-              isRequired
-              type="email"
-              label="Email Address"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              isInvalid={isEmailInvalid}
-              errorMessage={isEmailInvalid && "Please enter a valid email address"}
-              startContent={<Mail className="text-zinc-450" size={18} />}
-              variant="bordered"
-              color={isEmailInvalid ? "danger" : "default"}
-            />
+            <div className="flex flex-col gap-1 text-left">
+              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-0.5">
+                Email Address
+              </label>
+              <div className="relative">
+                <input
+                  required
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`w-full h-10 pl-10 pr-3 border bg-transparent text-sm rounded-medium focus:outline-none focus:ring-1 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-zinc-100 ${
+                    isEmailInvalid
+                      ? "border-danger focus:border-danger focus:ring-danger"
+                      : "border-zinc-200 dark:border-zinc-800 focus:border-blue-500 focus:ring-blue-500"
+                  }`}
+                />
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                  <Mail size={18} />
+                </div>
+              </div>
+            </div>
+            {isEmailInvalid && (
+              <p className="text-[11px] text-danger font-semibold mt-0.5 px-1">
+                Please enter a valid email address
+              </p>
+            )}
 
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+            <div className="flex flex-col gap-1.5 text-left">
+              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-0.5">
                 Profile Picture URL or Upload
               </label>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <Input
+              <div className="flex items-center gap-2">
+                <div className="flex-1 relative">
+                  <input
                     type="url"
-                    placeholder="Paste image URL or upload to the right"
+                    placeholder="Paste image URL..."
                     value={photoURL}
                     onChange={(e) => {
                       setPhotoURL(e.target.value);
                       setImagePreview(e.target.value);
                     }}
-                    startContent={<ImageIcon className="text-zinc-450" size={18} />}
-                    variant="bordered"
+                    className="w-full h-10 pl-10 pr-3 border border-zinc-200 dark:border-zinc-800 bg-transparent text-sm rounded-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-zinc-100"
                   />
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                    <ImageIcon size={18} />
+                  </div>
                 </div>
-                <div className="relative">
+                <div className="relative shrink-0">
                   <input
                     type="file"
                     accept="image/*"
@@ -181,40 +206,48 @@ export default function RegisterPage() {
                     isLoading={uploading}
                     startContent={!uploading && <Upload size={14} />}
                   >
-                    Upload Image
+                    Upload
                   </Button>
                 </div>
+                {imagePreview && (
+                  <div className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-800 overflow-hidden shrink-0">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                      onError={() => setImagePreview("")}
+                    />
+                  </div>
+                )}
               </div>
-              {imagePreview && (
-                <div className="relative w-full h-32 border border-zinc-200 dark:border-zinc-800 rounded-medium overflow-hidden">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                    onError={() => setImagePreview("")}
-                  />
-                </div>
-              )}
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <Input
-                isRequired
-                type="password"
-                label="Password"
-                placeholder="Min 6 chars · mix letters & numbers"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                isInvalid={isPasswordWeak}
-                errorMessage={
-                  isPasswordWeak
-                    ? "Use at least 6 characters; stronger passwords mix letters and numbers."
-                    : undefined
-                }
-                startContent={<Lock className="text-zinc-450" size={18} />}
-                variant="bordered"
-                color={isPasswordWeak ? "danger" : "default"}
-              />
+            <div className="flex flex-col gap-1 text-left">
+              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-0.5">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  required
+                  type="password"
+                  placeholder="Min 6 chars · mix letters & numbers"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`w-full h-10 pl-10 pr-3 border bg-transparent text-sm rounded-medium focus:outline-none focus:ring-1 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-zinc-100 ${
+                    isPasswordWeak
+                      ? "border-danger focus:border-danger focus:ring-danger"
+                      : "border-zinc-200 dark:border-zinc-800 focus:border-blue-500 focus:ring-blue-500"
+                  }`}
+                />
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                  <Lock size={18} />
+                </div>
+              </div>
+            {isPasswordWeak && (
+              <p className="text-[11px] text-danger font-semibold mt-0.5 px-1">
+                Use at least 6 characters; stronger passwords mix letters and numbers.
+              </p>
+            )}
               {password && (
                 <div className="px-1 flex flex-col gap-1">
                   <div className="flex justify-between items-center text-[10px] font-bold">
@@ -281,7 +314,7 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-zinc-550 mt-8">
+          <p className="text-center text-sm text-zinc-550 mt-4">
             Already have an account?{" "}
             <Link
               href="/login"

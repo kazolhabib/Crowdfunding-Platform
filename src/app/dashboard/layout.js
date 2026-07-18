@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
-import { Link, Button, Avatar, Popover, Spinner, Label } from "@heroui/react";
+import { Link, Button, Avatar, Spinner, Label } from "@heroui/react";
+import { FaSignOutAlt } from "react-icons/fa";
 import {
   Home,
   Compass,
@@ -20,6 +21,8 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen,
   LogOut,
   Coins,
   Shield,
@@ -42,6 +45,8 @@ export default function DashboardLayout({ children }) {
   // Notification state
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notificationRef = useRef(null);
 
   const fetchNotifications = useCallback(async () => {
     if (!user) return;
@@ -73,8 +78,26 @@ export default function DashboardLayout({ children }) {
     return undefined;
   }, [user, fetchNotifications]);
 
-  const handleBellClick = () => {
-    fetchNotifications();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleNotifications = () => {
+    setShowNotifications((prev) => {
+      const next = !prev;
+      if (next) {
+        fetchNotifications();
+      }
+      return next;
+    });
   };
 
   const markAllAsRead = async () => {
@@ -178,30 +201,26 @@ export default function DashboardLayout({ children }) {
           </div>
 
           {/* Floating Notification pop-up */}
-          <Popover>
-            <Popover.Trigger>
-              <button
-                type="button"
-                className="relative grid h-10 w-10 place-items-center border border-[#bfb5a3] bg-[#ebe3d5] text-[#24231f] shadow-[2px_2px_0_rgba(36,35,31,0.08)] transition-all hover:-translate-y-0.5 hover:border-[#24231f] hover:shadow-[3px_3px_0_#9a3412] cursor-pointer outline-none"
-                onClick={handleBellClick}
-              >
-                <Bell size={18} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#9a3412] rounded-full flex items-center justify-center text-[8px] font-bold text-white ring-1 ring-[#f4f0e8]">
-                    {unreadCount}
-                  </span>
-                )}
-              </button>
-            </Popover.Trigger>
-            <Popover.Content
-              placement="bottom-end"
-              className="w-80 border border-[#bfb5a3] bg-[#fdfaf4] shadow-[0_15px_35px_rgba(54,45,32,0.15)] overflow-hidden p-0 rounded-none"
+          <div className="relative" ref={notificationRef}>
+            <button
+              type="button"
+              className="relative grid h-10 w-10 place-items-center border border-[#bfb5a3] bg-[#ebe3d5] text-[#24231f] shadow-[2px_2px_0_rgba(36,35,31,0.08)] transition-all hover:-translate-y-0.5 hover:border-[#24231f] hover:shadow-[3px_3px_0_#9a3412] cursor-pointer outline-none"
+              onClick={toggleNotifications}
             >
-              <Popover.Dialog>
+              <Bell size={18} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#9a3412] rounded-full flex items-center justify-center text-[8px] font-bold text-white ring-1 ring-[#f4f0e8]">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            {showNotifications && (
+              <div className="absolute right-0 mt-2 w-80 border border-[#bfb5a3] bg-[#fdfaf4] shadow-[0_15px_35px_rgba(54,45,32,0.15)] overflow-hidden p-0 rounded-none z-50 text-[#24231f]">
                 <div className="flex justify-between items-center px-4 py-3 bg-[#ebe3d5]/70 border-b border-[#cfc6b7]">
-                  <Popover.Heading className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#6b6459]">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#6b6459]">
                     Notifications
-                  </Popover.Heading>
+                  </span>
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllAsRead}
@@ -217,7 +236,10 @@ export default function DashboardLayout({ children }) {
                       <div
                         key={notif._id}
                         onClick={() => {
-                          if (notif.actionRoute) router.push(notif.actionRoute);
+                          if (notif.actionRoute) {
+                            router.push(notif.actionRoute);
+                            setShowNotifications(false);
+                          }
                         }}
                         className={`p-4 hover:bg-[#ebe3d5]/35 transition-colors flex flex-col gap-1 cursor-pointer ${
                           !notif.read ? "bg-[#f5ead8]/40" : ""
@@ -241,9 +263,9 @@ export default function DashboardLayout({ children }) {
                     </div>
                   )}
                 </div>
-              </Popover.Dialog>
-            </Popover.Content>
-          </Popover>
+              </div>
+            )}
+          </div>
 
           {/* User badge + profile */}
           <div className="hidden sm:flex items-center gap-3 border-l border-[#d9d1c3] pl-4">
@@ -286,28 +308,43 @@ export default function DashboardLayout({ children }) {
                       : "text-[#565148] hover:bg-[#ebe3d5]/50 hover:text-[#9a3412]"
                   }`}
                 >
-                  <Icon size={16} />
+                  <Icon size={16} className="shrink-0 w-4 h-4" />
                   {!isSidebarCollapsed && <span>{link.label}</span>}
                 </Link>
               );
             })}
           </div>
 
-          <div className="p-3 border-t border-[#d9d1c3] flex flex-col gap-1 bg-[#ebe3d5]/20">
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 w-full px-3.5 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-danger hover:bg-red-50 cursor-pointer transition-colors border-0 outline-none"
-            >
-              <LogOut size={16} />
-              {!isSidebarCollapsed && <span>Sign Out</span>}
-            </button>
+          <div className="p-3 border-t border-[#d9d1c3] bg-[#ebe3d5]/20 flex flex-col gap-1">
+            <div className="flex items-center justify-between w-full">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-3.5 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-danger hover:bg-red-50 cursor-pointer transition-colors border-0 outline-none flex-1"
+              >
+                <FaSignOutAlt className="shrink-0 w-4 h-4 text-danger" />
+                {!isSidebarCollapsed && <span>Sign Out</span>}
+              </button>
 
-            <button
-              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="mt-1 flex items-center justify-center p-2 text-[#776f63] hover:text-[#9a3412] cursor-pointer select-none"
-            >
-              {isSidebarCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-            </button>
+              {!isSidebarCollapsed && (
+                <button
+                  onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                  className="flex items-center justify-center p-2 text-[#776f63] hover:text-[#9a3412] hover:bg-[#ebe3d5]/50 cursor-pointer transition-colors select-none outline-none border-0"
+                  title="Collapse Sidebar"
+                >
+                  <PanelLeftClose size={18} className="shrink-0 w-[18px] h-[18px]" />
+                </button>
+              )}
+            </div>
+
+            {isSidebarCollapsed && (
+              <button
+                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                className="mt-1 flex items-center justify-center p-2 text-[#776f63] hover:text-[#9a3412] hover:bg-[#ebe3d5]/50 cursor-pointer transition-colors select-none outline-none border-0"
+                title="Expand Sidebar"
+              >
+                <PanelLeftOpen size={18} className="shrink-0 w-[18px] h-[18px]" />
+              </button>
+            )}
           </div>
         </aside>
 
@@ -378,7 +415,7 @@ export default function DashboardLayout({ children }) {
                   }}
                   className="flex items-center gap-3 w-full px-3.5 py-3 text-[11px] font-bold uppercase tracking-[0.14em] text-danger hover:bg-red-50 cursor-pointer transition-colors border-0 outline-none"
                 >
-                  <LogOut size={16} />
+                  <FaSignOutAlt className="shrink-0 w-4 h-4 text-danger" />
                   <span>Sign Out</span>
                 </button>
               </div>

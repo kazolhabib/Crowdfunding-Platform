@@ -47,17 +47,18 @@ export default function CampaignDetailsPage() {
     setError("");
     setMessage("");
 
-    const contributionAmount = Number(amount);
-    if (!Number.isInteger(contributionAmount) || contributionAmount < campaign.minimum_contribution) {
-      setError(`Enter a whole-number contribution of at least ${campaign.minimum_contribution} credits.`);
-      return;
-    }
     if (!user) {
       router.push("/login");
       return;
     }
     if (user.role !== "Supporter") {
       setError("Only supporters can contribute to campaigns.");
+      return;
+    }
+
+    const contributionAmount = Number(amount);
+    if (!Number.isInteger(contributionAmount) || contributionAmount < campaign.minimum_contribution) {
+      setError(`Enter a whole-number contribution of at least ${campaign.minimum_contribution} credits.`);
       return;
     }
     if (contributionAmount > user.credits) {
@@ -245,7 +246,7 @@ export default function CampaignDetailsPage() {
                     value={amount}
                     onChange={(event) => setAmount(event.target.value)}
                     className="w-full px-3.5 py-3 border border-[#bfb5a3] bg-[#f4f0e8]/50 text-sm text-[#24231f] focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all font-semibold rounded-none disabled:opacity-50"
-                    disabled={!isActive || user?.role !== "Supporter"}
+                    disabled={!isActive || (user && user.role !== "Supporter")}
                   />
                 </div>
 
@@ -253,7 +254,7 @@ export default function CampaignDetailsPage() {
                   type="submit"
                   className="w-full h-12 bg-[#9a3412] hover:bg-[#b45309] text-[#f7f0e3] font-bold uppercase tracking-wider text-xs rounded-none transition-all shadow-[2px_2px_0_#24231f] disabled:opacity-50"
                   isLoading={submitting}
-                  disabled={!isActive || user?.role !== "Supporter"}
+                  isDisabled={!isActive || (user && user.role !== "Supporter")}
                   startContent={!submitting && <Heart size={14} />}
                 >
                   {isActive
