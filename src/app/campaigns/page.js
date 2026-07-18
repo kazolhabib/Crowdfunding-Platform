@@ -154,10 +154,10 @@ function ExploreCampaignsContent() {
             return (
               <Card
                 key={camp._id}
-                className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none overflow-hidden hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#24231f] transition-all duration-200 flex flex-col h-full"
+                className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[3px_3px_0_#24231f] rounded-none overflow-hidden hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0_#24231f] transition-all duration-200 flex flex-col h-full"
               >
                 {/* Image */}
-                <div className="relative h-48 w-full bg-[#ebe3d5] border-b border-[#bfb5a3] overflow-hidden group">
+                <div className="relative h-40 w-full bg-[#ebe3d5] border-b border-[#bfb5a3] overflow-hidden group">
                   <img
                     src={campImage}
                     alt={camp.title}
@@ -168,49 +168,49 @@ function ExploreCampaignsContent() {
                     }}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
-                  <span className="absolute top-3 left-3 bg-[#f7f0e3] border border-[#bfb5a3] px-2.5 py-1 text-[8px] font-black uppercase tracking-[0.14em] text-[#24231f] shadow-[1px_1px_0_#24231f]">
+                  <span className="absolute top-2.5 left-2.5 bg-[#f7f0e3] border border-[#bfb5a3] px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.12em] text-[#24231f] shadow-[1px_1px_0_#24231f]">
                     {camp.category}
                   </span>
                 </div>
 
                 {/* Body Content */}
-                <Card.Content className="p-5 flex-1 flex flex-col justify-between gap-5">
+                <Card.Content className="p-4 flex-1 flex flex-col justify-between gap-4">
                   <div>
-                    <h3 className="font-serif text-xl tracking-[-0.03em] text-[#24231f] line-clamp-1 hover:text-[#9a3412] transition-colors cursor-pointer" onClick={() => router.push(`/campaigns/${camp._id}`)}>
+                    <h3 className="font-serif text-base tracking-tight text-[#24231f] line-clamp-1 hover:text-[#9a3412] transition-colors cursor-pointer" onClick={() => router.push(`/campaigns/${camp._id}`)}>
                       {camp.title}
                     </h3>
-                    <p className="text-[#7c7467] text-[10px] font-bold uppercase tracking-wider mt-1.5">
+                    <p className="text-[#7c7467] text-[9px] font-bold uppercase tracking-wider mt-1">
                       by {camp.creator_name}
                     </p>
 
                     {camp.description && (
-                      <p className="text-xs text-[#645d52] leading-5 mt-3 line-clamp-2">
+                      <p className="text-[11px] text-[#645d52] leading-relaxed mt-2.5 line-clamp-2">
                         {camp.description}
                       </p>
                     )}
                   </div>
 
                   {/* Stats & Progress */}
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-2.5">
                     {/* Grid of details */}
-                    <div className="grid grid-cols-2 gap-2 border-t border-[#ebe3d5] pt-4 text-[10px] font-bold uppercase tracking-wider text-[#645d52]">
-                      <div className="flex items-center gap-2">
-                        <Calendar size={13} className="text-[#bfb5a3]" />
+                    <div className="grid grid-cols-2 gap-2 border-t border-[#ebe3d5] pt-3 text-[10px] font-bold uppercase tracking-wider text-[#645d52]">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar size={13} className="text-[#bfb5a3] shrink-0" />
                         <span className="truncate">Ends: {new Date(camp.deadline).toLocaleDateString()}</span>
                       </div>
-                      <div className="flex items-center gap-2 justify-end">
-                        <Target size={13} className="text-[#bfb5a3]" />
+                      <div className="flex items-center gap-1.5 justify-end">
+                        <Target size={13} className="text-[#bfb5a3] shrink-0" />
                         <span>Goal: {camp.funding_goal.toLocaleString()} Cr</span>
                       </div>
                     </div>
 
                     {/* Progress Bar & raised details */}
-                    <div className="flex flex-col gap-1.5 mt-1">
-                      <div className="flex justify-between items-end text-[10px] font-bold uppercase tracking-wider">
+                    <div className="flex flex-col gap-1.5 mt-0.5">
+                      <div className="flex justify-between items-end text-[9px] font-bold uppercase tracking-wider">
                         <span className="text-[#9a3412]">{percent}% Funded</span>
                         <span className="text-[#24231f]">{camp.amount_raised.toLocaleString()} Cr Raised</span>
                       </div>
-                      <div className="h-2 w-full bg-[#ebe3d5] rounded-none overflow-hidden border border-[#bfb5a3]/50">
+                      <div className="h-1.5 w-full bg-[#ebe3d5] rounded-none overflow-hidden border border-[#bfb5a3]/50">
                         <div
                           className="h-full bg-[#9a3412] transition-all duration-500"
                           style={{ width: `${percent}%` }}
@@ -220,10 +220,10 @@ function ExploreCampaignsContent() {
 
                     <Link
                       href={`/campaigns/${camp._id}`}
-                      className="w-full h-11 bg-[#ebe3d5] text-[#24231f] font-bold border border-[#bfb5a3] rounded-none uppercase tracking-wider text-xs hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f] transition-all flex items-center justify-center gap-2 shadow-[2px_2px_0_#24231f] mt-2"
+                      className="w-full h-9 bg-[#ebe3d5] text-[#24231f] font-bold border border-[#bfb5a3] rounded-none uppercase tracking-wider text-[10px] hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f] transition-all flex items-center justify-center gap-1.5 shadow-[2px_2px_0_#24231f] mt-1"
                     >
                       View Details
-                      <ArrowRight size={14} />
+                      <ArrowRight size={13} />
                     </Link>
                   </div>
                 </Card.Content>
