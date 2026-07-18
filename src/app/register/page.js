@@ -268,7 +268,7 @@ export default function RegisterPage() {
               <Select
                 selectedKeys={[role]}
                 onSelectionChange={(keys) => {
-                  const val = Array.from(keys)[0];
+                  const val = typeof keys === "string" ? keys : Array.from(keys)[0];
                   if (val) setRole(val);
                 }}
                 className="w-full"

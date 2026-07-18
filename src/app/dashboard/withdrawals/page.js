@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, Spinner, Select, Label, ListBox } from "@heroui/react";
+import { Card, Spinner, Select, Label, ListBox, Button } from "@heroui/react";
 import { DollarSign, AlertTriangle, Coins, History, ArrowUpRight } from "lucide-react";
 
 const PAYMENT_SYSTEMS = [
@@ -205,7 +205,7 @@ export default function WithdrawalsPage() {
               <Select
                 selectedKeys={[paymentSystem]}
                 onSelectionChange={(keys) => {
-                  const val = Array.from(keys)[0];
+                  const val = typeof keys === "string" ? keys : Array.from(keys)[0];
                   if (val) setPaymentSystem(val);
                 }}
                 className="w-full"

@@ -164,7 +164,7 @@ export default function AddCampaignPage() {
               <Select
                 selectedKeys={[category]}
                 onSelectionChange={(keys) => {
-                  const val = Array.from(keys)[0];
+                  const val = typeof keys === "string" ? keys : Array.from(keys)[0];
                   if (val) setCategory(val);
                 }}
                 className="w-full"
