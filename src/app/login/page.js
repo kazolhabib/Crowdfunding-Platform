@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, Input, Button } from "@heroui/react";
+import { Card, Button } from "@heroui/react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, LogIn } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
-import { GoogleLogin } from "@react-oauth/google";
-
-const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
+import { auth, googleProvider, signInWithPopup } from "@/lib/firebase";
 
 export default function LoginPage() {
   const { login, loginGoogle } = useAuth();
@@ -43,27 +41,21 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    if (!credentialResponse?.credential) {
-      setError("Google Sign-In did not return a credential. Please try again.");
-      return;
-    }
-
+  const handleGoogleLogin = async () => {
     setLoading(true);
     setError("");
     try {
-      await loginGoogle({ googleCredential: credentialResponse.credential });
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      await loginGoogle(user.email, user.displayName, user.photoURL, "Supporter");
       router.push("/dashboard");
       router.refresh();
     } catch (err) {
+      console.error("Google Auth Error:", err);
       setError(err.message || "Google login failed.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogleError = () => {
-    setError("Google Sign-In was cancelled or failed. Please try again.");
   };
 
   return (
@@ -155,34 +147,16 @@ export default function LoginPage() {
               </span>
             </div>
 
-            {googleClientId ? (
-              <div className="flex w-full justify-center min-h-[44px]">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleError}
-                  useOneTap={false}
-                  theme="outline"
-                  size="large"
-                  text="continue_with"
-                  shape="square"
-                  width="360"
-                />
-              </div>
-            ) : (
-              <Button
-                type="button"
-                variant="bordered"
-                className="w-full font-bold border border-[#bfb5a3] dark:border-zinc-800 rounded-none h-11 opacity-90 hover:bg-[#ebe3d5]/30 text-xs uppercase tracking-wider text-[#24231f] dark:text-zinc-200 transition-all shadow-[2px_2px_0_#24231f] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
-                startContent={<FaGoogle size={14} className="text-red-500 shrink-0" />}
-                onClick={() =>
-                  setError(
-                    "Google Sign-In is not configured. Add NEXT_PUBLIC_GOOGLE_CLIENT_ID to .env.local."
-                  )
-                }
-              >
-                Google Account
-              </Button>
-            )}
+            <Button
+              type="button"
+              variant="bordered"
+              className="w-full font-bold border border-[#bfb5a3] dark:border-zinc-800 rounded-none h-11 opacity-90 hover:bg-[#ebe3d5]/30 text-xs uppercase tracking-wider text-[#24231f] dark:text-zinc-200 transition-all shadow-[2px_2px_0_#24231f] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+              startContent={<FaGoogle size={14} className="text-red-500 shrink-0" />}
+              onClick={handleGoogleLogin}
+              isLoading={loading}
+            >
+              Google Account
+            </Button>
           </form>
 
           <p className="text-center text-xs text-[#565148] dark:text-zinc-400 font-bold uppercase tracking-wider mt-4">
