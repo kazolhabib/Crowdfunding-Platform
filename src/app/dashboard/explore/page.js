@@ -61,7 +61,7 @@ export default function ExplorePage() {
           </Card.Content>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {campaigns.map((camp) => {
             const percent = Math.min(
               100,
@@ -76,7 +76,7 @@ export default function ExplorePage() {
                 className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[3px_3px_0_#24231f] rounded-none overflow-hidden hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0_#24231f] transition-all duration-200 flex flex-col h-full"
               >
                 {/* Image Wrapper */}
-                <div className="relative h-40 w-full bg-[#ebe3d5] border-b border-[#bfb5a3] overflow-hidden">
+                <div className="relative h-36 w-full bg-[#ebe3d5] border-b border-[#bfb5a3] overflow-hidden">
                   <img
                     src={campImage}
                     alt={camp.title}
