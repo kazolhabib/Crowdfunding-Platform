@@ -179,10 +179,10 @@ export default function Home() {
             <span className="hidden sm:block">Est. 2024 — Global</span>
           </div>
 
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(390px,0.98fr)] lg:items-center lg:gap-16">
-            <div className="max-w-3xl py-4 lg:py-10">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">
+            <div className="lg:col-span-7 py-4 lg:py-10">
               <p className="mb-6 text-[11px] font-bold uppercase tracking-[0.2em] text-[#9a3412]">The art of collective belief</p>
-              <h1 className="font-serif text-[clamp(3.8rem,8vw,7.9rem)] leading-[0.82] tracking-[-0.085em] text-[#24231f]">
+              <h1 className="font-serif text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.9] tracking-[-0.085em] text-[#24231f]">
                 Back ideas<br />that <em className="font-normal text-[#9a3412]">endure.</em>
               </h1>
               <p className="mt-9 max-w-md text-base leading-7 text-[#645d52] sm:text-lg sm:leading-8">
@@ -198,18 +198,18 @@ export default function Home() {
                 </Link>
               </div>
               <div className="mt-14 grid max-w-xl grid-cols-3 border-t border-[#cfc6b7] pt-5">
-                {[["$2.4m", "directed to ideas"], ["12k", "active patrons"], ["48", "countries reached"]].map(([value, label]) => (
-                  <div key={label} className="border-r border-[#cfc6b7] px-4 first:pl-0 last:border-r-0">
-                    <p className="font-serif text-3xl tracking-[-0.06em]">{value}</p>
+                {[["$2.4m", "directed to ideas"], ["12k", "active patrons"], ["48", "countries reached"]].map(([value, label], index) => (
+                  <div key={label} className={`border-[#cfc6b7] px-2 sm:px-4 first:pl-0 ${index < 2 ? "border-r" : ""}`}>
+                    <p className="font-serif text-2xl sm:text-3xl tracking-[-0.06em]">{value}</p>
                     <p className="mt-1 text-[9px] font-bold uppercase leading-4 tracking-[0.11em] text-[#6b6459]">{label}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
+            <div className="relative mx-auto w-full max-w-xl lg:max-w-none lg:col-span-5">
               <div className="absolute -right-5 -top-5 hidden h-28 w-28 rounded-full border border-[#b9ac99] lg:block" />
-              <div className="hero-swiper relative overflow-hidden bg-[#24231f] p-3 shadow-[18px_18px_0_#d8cfbf]">
+              <div className="hero-swiper relative overflow-hidden bg-[#24231f] p-3 shadow-[8px_8px_0_#d8cfbf] sm:shadow-[16px_16px_0_#d8cfbf]">
                 <Swiper
                   modules={[Autoplay, Navigation, Pagination]}
                   spaceBetween={0}
@@ -494,9 +494,13 @@ export default function Home() {
             <p className="mt-7 max-w-xl text-sm leading-7 text-[#c7beb0]">Whether you are shaping a new idea or looking for one to stand behind, there is a place for you here.</p>
           </div>
           <div className="mt-10 flex flex-col gap-3 lg:mt-0">
-            <Button as={Link} href="/register" size="lg" className="h-12 rounded-none bg-[#f7f0e3] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24231f] hover:bg-[#e8c67a]" endContent={<ArrowUpRight size={15} />}>
-              Create your account
-            </Button>
+            <Link
+              href="/register"
+              className="h-12 rounded-none bg-[#f7f0e3] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24231f] hover:bg-[#e8c67a] transition-all flex items-center justify-center gap-1.5"
+            >
+              <span>Create your account</span>
+              <ArrowUpRight size={15} />
+            </Link>
             <Link href="/campaigns" className="border-b border-white/25 py-3 text-center text-[10px] font-bold uppercase tracking-[0.14em] text-[#f7f0e3] transition-colors hover:border-[#e8c67a] hover:text-[#e8c67a]">
               Explore campaigns
             </Link>
