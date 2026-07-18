@@ -102,31 +102,31 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center py-6 sm:py-8 px-4 bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-black">
-      <Card className="w-full max-w-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl">
+    <div className="flex-1 flex items-center justify-center py-6 sm:py-8 px-4 bg-[#f4f0e8] dark:bg-zinc-950">
+      <Card className="w-full max-w-md border-2 border-[#24231f] bg-[#fdfaf4] dark:bg-zinc-900 shadow-[4px_4px_0_#24231f] rounded-none">
         <Card.Content className="p-5 sm:p-6">
           <div className="flex flex-col items-center mb-4 text-center">
             <Link
               href="/"
-              className="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 mb-1"
+              className="font-extrabold text-2xl text-[#24231f] dark:text-[#f7f0e3] mb-1 font-mono tracking-tighter"
             >
               Crowdfunding
             </Link>
-            <h2 className="text-lg font-bold text-zinc-800 dark:text-white">Create an account</h2>
-            <p className="text-zinc-500 text-xs mt-0.5">
+            <h2 className="text-sm font-bold text-[#565148] dark:text-zinc-400 uppercase tracking-widest">Create an account</h2>
+            <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-wider mt-0.5">
               Start raising funds or backing creative ideas today
             </p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium border border-red-100 dark:border-red-900/30">
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-semibold border-2 border-red-200 dark:border-red-900/30">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
             <div className="flex flex-col gap-1 text-left">
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-0.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[#565148] dark:text-zinc-400 px-0.5">
                 Full Name
               </label>
               <div className="relative">
@@ -136,16 +136,16 @@ export default function RegisterPage() {
                   placeholder="Enter your full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full h-10 pl-10 pr-3 border border-zinc-200 dark:border-zinc-800 bg-transparent text-sm rounded-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-zinc-100"
+                  className="w-full h-10 pl-10 pr-3 border border-[#bfb5a3] bg-[#f4f0e8]/30 dark:bg-zinc-800/40 text-sm rounded-none focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all placeholder:text-[#888173] text-[#24231f] dark:text-zinc-100 font-semibold"
                 />
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#776f63]">
                   <User size={18} />
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-1 text-left">
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-0.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[#565148] dark:text-zinc-400 px-0.5">
                 Email Address
               </label>
               <div className="relative">
@@ -155,13 +155,13 @@ export default function RegisterPage() {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full h-10 pl-10 pr-3 border bg-transparent text-sm rounded-medium focus:outline-none focus:ring-1 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-zinc-100 ${
+                  className={`w-full h-10 pl-10 pr-3 border bg-[#f4f0e8]/30 dark:bg-zinc-800/40 text-sm rounded-none focus:outline-none transition-all placeholder:text-[#888173] text-[#24231f] dark:text-zinc-100 font-semibold ${
                     isEmailInvalid
-                      ? "border-danger focus:border-danger focus:ring-danger"
-                      : "border-zinc-200 dark:border-zinc-800 focus:border-blue-500 focus:ring-blue-500"
+                      ? "border-danger focus:border-danger bg-red-50/10"
+                      : "border-[#bfb5a3] focus:border-[#9a3412] focus:bg-[#fdfaf4]"
                   }`}
                 />
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#776f63]">
                   <Mail size={18} />
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default function RegisterPage() {
             )}
 
             <div className="flex flex-col gap-1.5 text-left">
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-0.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[#565148] dark:text-zinc-400 px-0.5">
                 Profile Picture URL or Upload
               </label>
               <div className="flex items-center gap-2">
@@ -186,9 +186,9 @@ export default function RegisterPage() {
                       setPhotoURL(e.target.value);
                       setImagePreview(e.target.value);
                     }}
-                    className="w-full h-10 pl-10 pr-3 border border-zinc-200 dark:border-zinc-800 bg-transparent text-sm rounded-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-zinc-100"
+                    className="w-full h-10 pl-10 pr-3 border border-[#bfb5a3] bg-[#f4f0e8]/30 dark:bg-zinc-800/40 text-sm rounded-none focus:outline-none focus:border-[#9a3412] focus:bg-[#fdfaf4] transition-all placeholder:text-[#888173] text-[#24231f] dark:text-zinc-100 font-semibold"
                   />
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#776f63]">
                     <ImageIcon size={18} />
                   </div>
                 </div>
@@ -202,7 +202,7 @@ export default function RegisterPage() {
                   <Button
                     type="button"
                     variant="bordered"
-                    className="h-10 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors rounded-medium"
+                    className="h-10 border border-[#bfb5a3] dark:border-zinc-850 hover:bg-[#ebe3d5]/30 text-xs font-bold uppercase tracking-wider text-[#24231f] dark:text-zinc-200 transition-colors rounded-none shadow-[1px_1px_0_#24231f]"
                     isLoading={uploading}
                     startContent={!uploading && <Upload size={14} />}
                   >
@@ -210,7 +210,7 @@ export default function RegisterPage() {
                   </Button>
                 </div>
                 {imagePreview && (
-                  <div className="w-10 h-10 rounded-full border border-zinc-200 dark:border-zinc-800 overflow-hidden shrink-0">
+                  <div className="w-10 h-10 rounded-full border border-[#bfb5a3] dark:border-zinc-800 overflow-hidden shrink-0">
                     <img
                       src={imagePreview}
                       alt="Preview"
@@ -223,7 +223,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="flex flex-col gap-1 text-left">
-              <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 px-0.5">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-[#565148] dark:text-zinc-400 px-0.5">
                 Password
               </label>
               <div className="relative">
@@ -233,36 +233,36 @@ export default function RegisterPage() {
                   placeholder="Min 6 chars · mix letters & numbers"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full h-10 pl-10 pr-3 border bg-transparent text-sm rounded-medium focus:outline-none focus:ring-1 transition-all placeholder:text-zinc-400 text-zinc-800 dark:text-zinc-100 ${
+                  className={`w-full h-10 pl-10 pr-3 border bg-[#f4f0e8]/30 dark:bg-zinc-800/40 text-sm rounded-none focus:outline-none transition-all placeholder:text-[#888173] text-[#24231f] dark:text-zinc-100 font-semibold ${
                     isPasswordWeak
-                      ? "border-danger focus:border-danger focus:ring-danger"
-                      : "border-zinc-200 dark:border-zinc-800 focus:border-blue-500 focus:ring-blue-500"
+                      ? "border-danger focus:border-danger bg-red-50/10"
+                      : "border-[#bfb5a3] focus:border-[#9a3412] focus:bg-[#fdfaf4]"
                   }`}
                 />
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#776f63]">
                   <Lock size={18} />
                 </div>
               </div>
+            </div>
             {isPasswordWeak && (
               <p className="text-[11px] text-danger font-semibold mt-0.5 px-1">
                 Use at least 6 characters; stronger passwords mix letters and numbers.
               </p>
             )}
-              {password && (
-                <div className="px-1 flex flex-col gap-1">
-                  <div className="flex justify-between items-center text-[10px] font-bold">
-                    <span className="text-zinc-400">Password Strength:</span>
-                    <span className={strength.text}>{strength.label}</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-zinc-150 dark:bg-zinc-800 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full ${strength.color} transition-all duration-300`}
-                      style={{ width: `${(strength.score / 4) * 100}%` }}
-                    />
-                  </div>
+            {password && (
+              <div className="px-1 flex flex-col gap-1">
+                <div className="flex justify-between items-center text-[9px] font-bold uppercase tracking-wider">
+                  <span className="text-[#776f63]">Password Strength:</span>
+                  <span className={strength.text}>{strength.label}</span>
                 </div>
-              )}
-            </div>
+                <div className="h-1.5 w-full bg-[#ebe3d5] dark:bg-zinc-850 rounded-none overflow-hidden">
+                  <div
+                    className={`h-full ${strength.color === "bg-red-500" ? "bg-red-600" : strength.color === "bg-orange-500" ? "bg-amber-600" : "bg-green-600"} transition-all duration-300`}
+                    style={{ width: `${(strength.score / 4) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="flex flex-col gap-1">
               <Select
@@ -273,29 +273,29 @@ export default function RegisterPage() {
                 }}
                 className="w-full"
               >
-                <Label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1">
+                <Label className="text-[10px] font-bold uppercase tracking-wider text-[#565148] dark:text-zinc-400 mb-1">
                   Select Role
                 </Label>
-                <Select.Trigger className="w-full flex items-center justify-between border border-zinc-200 dark:border-zinc-800 rounded-medium px-3 h-10 bg-transparent text-sm hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors">
+                <Select.Trigger className="w-full flex items-center justify-between border border-[#bfb5a3] dark:border-zinc-800 rounded-none px-3.5 h-10 bg-[#f4f0e8]/30 dark:bg-zinc-800/40 text-sm font-semibold hover:border-[#9a3412] focus:bg-[#fdfaf4] transition-colors text-[#24231f] dark:text-zinc-200">
                   <div className="flex items-center gap-2">
-                    <UserCheck className="text-zinc-400" size={18} />
+                    <UserCheck className="text-[#776f63]" size={18} />
                     <Select.Value />
                   </div>
                   <Select.Indicator />
                 </Select.Trigger>
                 <Select.Popover>
-                  <ListBox className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-medium shadow-lg p-1">
+                  <ListBox className="bg-[#fdfaf4] dark:bg-zinc-900 border border-[#bfb5a3] dark:border-zinc-800 rounded-none shadow-lg p-1">
                     <ListBox.Item
                       id="Supporter"
                       textValue="Supporter"
-                      className="px-3 py-2 rounded-small text-sm cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-750 dark:text-zinc-300"
+                      className="px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-[#ebe3d5] text-[#24231f] dark:text-zinc-300 rounded-none"
                     >
                       Supporter (Starts with 50 credits)
                     </ListBox.Item>
                     <ListBox.Item
                       id="Creator"
                       textValue="Creator"
-                      className="px-3 py-2 rounded-small text-sm cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-750 dark:text-zinc-300"
+                      className="px-3.5 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-[#ebe3d5] text-[#24231f] dark:text-zinc-300 rounded-none"
                     >
                       Creator (Starts with 20 credits)
                     </ListBox.Item>
@@ -306,19 +306,18 @@ export default function RegisterPage() {
 
             <Button
               type="submit"
-              color="primary"
-              className="w-full font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white mt-2 h-11"
+              className="w-full h-11 bg-[#9a3412] hover:bg-[#b45309] text-[#f7f0e3] font-bold uppercase tracking-wider text-xs rounded-none transition-all shadow-[2px_2px_0_#24231f] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none mt-2"
               isLoading={loading}
             >
               Create Account
             </Button>
           </form>
 
-          <p className="text-center text-sm text-zinc-550 mt-4">
+          <p className="text-center text-xs text-[#565148] dark:text-zinc-400 font-bold uppercase tracking-wider mt-4">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+              className="font-bold text-[#9a3412] dark:text-orange-400 hover:underline hover:text-[#b45309]"
             >
               Sign in here
             </Link>
