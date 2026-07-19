@@ -43,7 +43,7 @@ function isAllowedRoute(pathname, role) {
   );
 }
 
-export default async function middleware(request) {
+export async function proxy(request) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("token")?.value;
   const isDashboardRoute = pathname.startsWith("/dashboard");
