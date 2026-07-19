@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
 import Link from "next/link";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import {
   ArrowRight,
   ShieldCheck,
@@ -144,6 +145,7 @@ const MOCK_FALLBACK_CAMPAIGNS = [
 export default function Home() {
   const { showToast } = useToast();
   const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
@@ -159,6 +161,8 @@ export default function Home() {
       } catch (err) {
         console.error("Fetch campaigns error, using mock fallback:", err);
         setCampaigns(MOCK_FALLBACK_CAMPAIGNS);
+      } finally {
+        setLoading(false);
       }
     };
     loadCampaigns();
@@ -322,7 +326,11 @@ export default function Home() {
               transition={{ duration: 0.25 }}
               className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12 lg:gap-5"
             >
-              {filteredCampaigns.length > 0 ? (
+              {loading ? (
+                <div className="col-span-full py-16">
+                  <LoadingSpinner label="Retrieving Campaigns..." textClassName="text-[#b4aa9b]" />
+                </div>
+              ) : filteredCampaigns.length > 0 ? (
                 filteredCampaigns.map((camp, index) => {
                   const percent = Math.min(100, Math.round((camp.amount_raised / camp.funding_goal) * 100));
                   const campaignFallbackImage = CAMPAIGN_FALLBACK_IMAGES[camp.category] || CAMPAIGN_FALLBACK_IMAGES.default;
