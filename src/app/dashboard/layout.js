@@ -155,6 +155,7 @@ export default function DashboardLayout({ children }) {
       case "Admin":
         return [
           { label: "Home", href: "/dashboard/admin", icon: Home },
+          { label: "Campaign Approvals", href: "/dashboard/campaign-approvals", icon: ListChecks },
           { label: "Manage Users", href: "/dashboard/manage-users", icon: Users },
           { label: "Manage Campaigns", href: "/dashboard/manage-campaigns", icon: Settings },
           { label: "Withdrawal Requests", href: "/dashboard/admin-withdrawals", icon: FileText },
