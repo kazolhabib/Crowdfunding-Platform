@@ -63,7 +63,8 @@ export default function MyContributionsPage() {
         </Card>
       ) : (
         <>
-          <div className="overflow-x-auto rounded-none border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f]">
+          {/* Desktop Table View - Hidden on mobile */}
+          <div className="hidden md:block overflow-x-auto rounded-none border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f]">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[#ebe3d5] border-b border-[#bfb5a3] text-left">
@@ -98,6 +99,42 @@ export default function MyContributionsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View - Hidden on desktop */}
+          <div className="block md:hidden space-y-4">
+            {contributions.map((contrib) => (
+              <div
+                key={contrib._id}
+                className="border border-[#bfb5a3] bg-[#fdfaf4] p-4 shadow-[4px_4px_0_#24231f] rounded-none flex flex-col gap-3"
+              >
+                <div className="flex justify-between items-start gap-2">
+                  <h3 className="font-serif text-base font-bold text-[#24231f] leading-snug">
+                    {contrib.campaign_title}
+                  </h3>
+                  <span className={`px-2 py-0.5 border text-[9px] font-bold uppercase rounded-none shrink-0 ${statusColor(contrib.status)}`}>
+                    {contrib.status}
+                  </span>
+                </div>
+
+                <div className="h-px bg-[#cfc6b7]/50 w-full" />
+
+                <div className="grid grid-cols-2 gap-y-2 text-xs">
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#776f63] mb-0.5">Creator</p>
+                    <p className="font-semibold text-[#645d52]">{contrib.creator_name}</p>
+                  </div>
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#776f63] mb-0.5">Amount</p>
+                    <p className="font-extrabold text-[#9a3412]">{contrib.contribution_amount} Cr</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#776f63] mb-0.5">Date</p>
+                    <p className="text-[#645d52] font-semibold">{new Date(contrib.date).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
           {totalPages > 1 && (
