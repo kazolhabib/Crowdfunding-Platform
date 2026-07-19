@@ -6,6 +6,8 @@ import { Card, Button, Spinner } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Calendar, Target, TrendingUp, ArrowRight, Search } from "lucide-react";
+import { useToast } from "@/context/ToastContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const CATEGORIES = ["All", "Tech", "Art", "Community", "Health"];
 
@@ -19,6 +21,7 @@ const CAMPAIGN_FALLBACK_IMAGES = {
 
 function ExploreCampaignsContent() {
   const router = useRouter();
+  const { showToast } = useToast();
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get("category") || "All";
 
@@ -119,9 +122,7 @@ function ExploreCampaignsContent() {
 
       {/* Campaign list */}
       {loading ? (
-        <div className="flex items-center justify-center min-h-[40vh]">
-          <Spinner size="lg" color="warning" label="Retrieving Registry..." className="text-[#24231f]" />
-        </div>
+        <LoadingSpinner label="Retrieving Registry..." />
       ) : filteredCampaigns.length === 0 ? (
         <Card className="border border-[#bfb5a3] bg-[#fdfaf4] shadow-[4px_4px_0_#24231f] rounded-none py-16 text-center">
           <Card.Content className="flex flex-col items-center justify-center gap-4">
@@ -220,6 +221,7 @@ function ExploreCampaignsContent() {
 
                     <Link
                       href={`/campaigns/${camp._id}`}
+                      onClick={() => showToast(`Opening details for ${camp.title}...`, "info")}
                       className="w-full h-9 bg-[#ebe3d5] text-[#24231f] font-bold border border-[#bfb5a3] rounded-none uppercase tracking-wider text-[10px] hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f] transition-all flex items-center justify-center gap-1.5 shadow-[2px_2px_0_#24231f] mt-1"
                     >
                       View Details
@@ -239,11 +241,7 @@ function ExploreCampaignsContent() {
 export default function ExploreCampaignsPage() {
   return (
     <div className="min-h-screen bg-[#f4f0e8] text-[#24231f]">
-      <Suspense fallback={
-        <div className="flex items-center justify-center min-h-[40vh]">
-          <Spinner size="lg" color="warning" label="Loading..." className="text-[#24231f]" />
-        </div>
-      }>
+      <Suspense fallback={<LoadingSpinner label="Loading explore..." />}>
         <ExploreCampaignsContent />
       </Suspense>
     </div>

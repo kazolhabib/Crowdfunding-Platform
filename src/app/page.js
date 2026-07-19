@@ -11,6 +11,7 @@ import {
   TrendingUp,
   ArrowUpRight,
 } from "lucide-react";
+import { useToast } from "@/context/ToastContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
@@ -141,6 +142,7 @@ const MOCK_FALLBACK_CAMPAIGNS = [
 ];
 
 export default function Home() {
+  const { showToast } = useToast();
   const [campaigns, setCampaigns] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -250,6 +252,7 @@ export default function Home() {
                           </p>
                           <Link
                             href={slide.ctaLink}
+                            onClick={() => showToast(`Navigating to ${slide.ctaText}...`, "info")}
                             className="mt-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-white hover:text-[#e8c67a]"
                           >
                             {slide.ctaText} <ArrowRight size={15} />
@@ -345,7 +348,12 @@ export default function Home() {
                         <span className="bg-[#f7f0e3] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-[#24231f]">{camp.category}</span>
                         <span className="border border-white/35 bg-black/15 px-2 py-1 text-[9px] font-bold tracking-[0.12em] text-white backdrop-blur-sm">0{index + 1}</span>
                       </div>
-                      <Link href={`/campaigns/${camp._id}`} className="absolute inset-0 z-10" aria-label={`View ${camp.title}`} />
+                      <Link
+                        href={`/campaigns/${camp._id}`}
+                        onClick={() => showToast(`Opening details for ${camp.title}...`, "info")}
+                        className="absolute inset-0 z-10"
+                        aria-label={`View ${camp.title}`}
+                      />
                       <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
                         <div className="mb-4 flex items-end justify-between gap-3 border-b border-white/25 pb-3">
                           <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#e8c67a]">{percent}% funded</span>

@@ -6,6 +6,8 @@ import { Card, Button, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Calendar, Target, TrendingUp, ArrowRight } from "lucide-react";
+import { useToast } from "@/context/ToastContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const CAMPAIGN_FALLBACK_IMAGES = {
   Tech: "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&q=80&w=1200",
@@ -17,6 +19,7 @@ const CAMPAIGN_FALLBACK_IMAGES = {
 
 export default function ExplorePage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,11 +39,7 @@ export default function ExplorePage() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[40vh]">
-        <Spinner size="lg" color="warning" label="Loading campaigns..." />
-      </div>
-    );
+    return <LoadingSpinner label="Loading campaigns..." />;
   }
 
   return (
@@ -143,6 +142,7 @@ export default function ExplorePage() {
                     {/* Action Button */}
                     <Link
                       href={`/campaigns/${camp._id}`}
+                      onClick={() => showToast(`Opening details for ${camp.title}...`, "info")}
                       className="w-full h-9 bg-[#ebe3d5] text-[#24231f] font-bold border border-[#bfb5a3] rounded-none uppercase tracking-wider text-[10px] hover:bg-[#24231f] hover:text-[#f4f0e8] hover:border-[#24231f] transition-all flex items-center justify-center gap-1.5 shadow-[2px_2px_0_#24231f] mt-1"
                     >
                       View Details

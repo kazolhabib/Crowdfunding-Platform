@@ -6,11 +6,14 @@ import { Button, Card, Spinner } from "@heroui/react";
 import { useParams, useRouter } from "next/navigation";
 import { Calendar, CircleUserRound, Gift, Target, TrendingUp, Heart } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function CampaignDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const { user, refreshSession } = useAuth();
+  const { showToast } = useToast();
   const [campaign, setCampaign] = useState(null);
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(true);
@@ -52,17 +55,23 @@ export default function CampaignDetailsPage() {
       return;
     }
     if (user.role !== "Supporter") {
-      setError("Only supporters can contribute to campaigns.");
+      const errMsg = "Only supporters can contribute to campaigns.";
+      setError(errMsg);
+      showToast(errMsg, "error");
       return;
     }
 
     const contributionAmount = Number(amount);
     if (!Number.isInteger(contributionAmount) || contributionAmount < campaign.minimum_contribution) {
-      setError(`Enter a whole-number contribution of at least ${campaign.minimum_contribution} credits.`);
+      const errMsg = `Enter a whole-number contribution of at least ${campaign.minimum_contribution} credits.`;
+      setError(errMsg);
+      showToast(errMsg, "warning");
       return;
     }
     if (contributionAmount > user.credits) {
-      setError("You do not have enough credits for this contribution.");
+      const errMsg = "You do not have enough credits for this contribution.";
+      setError(errMsg);
+      showToast(errMsg, "warning");
       return;
     }
 
@@ -77,9 +86,13 @@ export default function CampaignDetailsPage() {
       if (!response.ok) throw new Error(data.error || "Unable to submit contribution.");
       await refreshSession();
       setAmount("");
-      setMessage("Contribution submitted successfully! Waiting for creator approval.");
+      const successMsg = "Contribution submitted successfully! Waiting for creator approval.";
+      setMessage(successMsg);
+      showToast(successMsg, "success");
     } catch (submitError) {
-      setError(submitError.message || "Unable to submit contribution.");
+      const errMsg = submitError.message || "Unable to submit contribution.";
+      setError(errMsg);
+      showToast(errMsg, "error");
     } finally {
       setSubmitting(false);
     }
@@ -118,11 +131,7 @@ export default function CampaignDetailsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <Spinner size="lg" color="warning" label="Loading campaign..." />
-      </div>
-    );
+    return <LoadingSpinner label="Loading campaign details..." />;
   }
 
   if (!campaign) {
