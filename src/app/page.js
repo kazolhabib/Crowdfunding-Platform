@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import AnimatedCounter from "@/components/AnimatedCounter";
 import {
   ArrowRight,
   ShieldCheck,
@@ -204,10 +205,22 @@ export default function Home() {
                 </Link>
               </div>
               <div className="mt-14 grid max-w-xl grid-cols-3 border-t border-[#cfc6b7] pt-5">
-                {[["$2.4m", "directed to ideas"], ["12k", "active patrons"], ["48", "countries reached"]].map(([value, label], index) => (
-                  <div key={label} className={`border-[#cfc6b7] px-2 sm:px-4 first:pl-0 ${index < 2 ? "border-r" : ""}`}>
-                    <p className="font-serif text-2xl sm:text-3xl tracking-[-0.06em]">{value}</p>
-                    <p className="mt-1 text-[9px] font-bold uppercase leading-4 tracking-[0.11em] text-[#6b6459]">{label}</p>
+                {[
+                  { value: 2.4, decimals: 1, prefix: "$", suffix: "m", label: "directed to ideas" },
+                  { value: 12, decimals: 0, prefix: "", suffix: "k", label: "active patrons" },
+                  { value: 48, decimals: 0, prefix: "", suffix: "", label: "countries reached" }
+                ].map((stat, index) => (
+                  <div key={stat.label} className={`border-[#cfc6b7] px-2 sm:px-4 first:pl-0 ${index < 2 ? "border-r" : ""}`}>
+                    <p className="font-serif text-2xl sm:text-3xl tracking-[-0.06em]">
+                      <AnimatedCounter
+                        value={stat.value}
+                        decimals={stat.decimals}
+                        prefix={stat.prefix}
+                        suffix={stat.suffix}
+                        duration={3}
+                      />
+                    </p>
+                    <p className="mt-1 text-[9px] font-bold uppercase leading-4 tracking-[0.11em] text-[#6b6459]">{stat.label}</p>
                   </div>
                 ))}
               </div>
@@ -447,10 +460,22 @@ export default function Home() {
             <p className="max-w-sm text-sm leading-6 text-[#f7dfc4]">A growing network of creators and supporters directing resources toward work with real-world potential.</p>
           </div>
           <div className="grid divide-y divide-[#f7f0e3]/25 md:grid-cols-3 md:divide-x md:divide-y-0">
-            {[["$24.5M+", "capital directed"], ["1,420+", "projects funded"], ["120K+", "people reached"]].map(([value, label]) => (
-              <div key={label} className="py-9 first:pl-0 md:px-9 md:py-12 md:first:pl-0">
-                <p className="font-serif text-5xl tracking-[-0.07em] sm:text-6xl">{value}</p>
-                <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#f2c79c]">{label}</p>
+            {[
+              { value: 24.5, decimals: 1, prefix: "$", suffix: "M+", label: "capital directed" },
+              { value: 1420, decimals: 0, prefix: "", suffix: "+", label: "projects funded" },
+              { value: 120, decimals: 0, prefix: "", suffix: "K+", label: "people reached" }
+            ].map((stat) => (
+              <div key={stat.label} className="py-9 first:pl-0 md:px-9 md:py-12 md:first:pl-0">
+                <p className="font-serif text-5xl tracking-[-0.07em] sm:text-6xl">
+                  <AnimatedCounter
+                    value={stat.value}
+                    decimals={stat.decimals}
+                    prefix={stat.prefix}
+                    suffix={stat.suffix}
+                    duration={3}
+                  />
+                </p>
+                <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#f2c79c]">{stat.label}</p>
               </div>
             ))}
           </div>
