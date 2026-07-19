@@ -25,21 +25,21 @@ export function ToastProvider({ children }) {
     switch (type) {
       case "success":
         return {
-          bg: "bg-[#15803d]/10",
+          bg: "bg-[#f0fdf4]",
           border: "border-[#15803d]",
           text: "text-[#15803d]",
           icon: CheckCircle,
         };
       case "error":
         return {
-          bg: "bg-[#9a3412]/10",
+          bg: "bg-[#fff5f5]",
           border: "border-[#9a3412]",
           text: "text-[#9a3412]",
           icon: AlertCircle,
         };
       case "warning":
         return {
-          bg: "bg-[#b45309]/10",
+          bg: "bg-[#fffbeb]",
           border: "border-[#b45309]",
           text: "text-[#b45309]",
           icon: AlertTriangle,
