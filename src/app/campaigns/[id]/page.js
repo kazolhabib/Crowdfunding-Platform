@@ -9,6 +9,14 @@ import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/context/ToastContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
+const CAMPAIGN_FALLBACK_IMAGES = {
+  Tech: "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&q=80&w=1200",
+  Art: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=1200",
+  Health: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=1200",
+  Community: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=1200",
+  default: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=1200",
+};
+
 export default function CampaignDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
@@ -144,21 +152,26 @@ export default function CampaignDetailsPage() {
 
   const progress = Math.min(100, Math.round((campaign.amount_raised / campaign.funding_goal) * 100));
   const isActive = campaign.status === "approved" && new Date(campaign.deadline) >= new Date();
+  const fallbackImage = CAMPAIGN_FALLBACK_IMAGES[campaign.category] || CAMPAIGN_FALLBACK_IMAGES.default;
+  const campImage = campaign.image_url || fallbackImage;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
         {/* Main Content */}
         <section className="space-y-6">
-          {campaign.image_url && (
-            <div className="h-72 w-full border border-[#bfb5a3] bg-[#ebe3d5] rounded-none overflow-hidden shadow-[4px_4px_0_#24231f] sm:h-96">
-              <img
-                src={campaign.image_url}
-                alt={campaign.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+          <div className="h-72 w-full border border-[#bfb5a3] bg-[#ebe3d5] rounded-none overflow-hidden shadow-[4px_4px_0_#24231f] sm:h-96">
+            <img
+              src={campImage}
+              alt={campaign.title}
+              onError={(e) => {
+                if (e.currentTarget.dataset.fallbackApplied) return;
+                e.currentTarget.dataset.fallbackApplied = "true";
+                e.currentTarget.src = fallbackImage;
+              }}
+              className="w-full h-full object-cover"
+            />
+          </div>
 
           <div>
             <span className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a3412]">
