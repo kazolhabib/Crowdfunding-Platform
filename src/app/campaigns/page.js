@@ -5,7 +5,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { Card, Button, Spinner } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Target, TrendingUp, ArrowRight, Search } from "lucide-react";
+import { Calendar, Target, TrendingUp, ArrowRight, Search, ArrowUpRight } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -240,10 +240,35 @@ function ExploreCampaignsContent() {
 
 export default function ExploreCampaignsPage() {
   return (
-    <div className="min-h-screen bg-[#f4f0e8] text-[#24231f]">
-      <Suspense fallback={<LoadingSpinner label="Loading explore..." />}>
-        <ExploreCampaignsContent />
-      </Suspense>
+    <div className="min-h-screen bg-[#f4f0e8] text-[#24231f] flex flex-col justify-between">
+      <div className="flex-1">
+        <Suspense fallback={<LoadingSpinner label="Loading explore..." />}>
+          <ExploreCampaignsContent />
+        </Suspense>
+      </div>
+
+      {/* Bottom CTA section */}
+      <section className="bg-[#f4f0e8] px-5 pb-20 sm:px-8 lg:px-12 lg:pb-28 mt-12">
+        <div className="mx-auto max-w-[1440px] overflow-hidden bg-[#24231f] px-6 py-14 text-[#f7f0e3] sm:px-10 lg:grid lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16 lg:px-16 lg:py-20">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#e8c67a]">Start where you are</p>
+            <h2 className="mt-5 max-w-3xl font-serif text-5xl leading-[0.88] tracking-[-0.07em] sm:text-6xl lg:text-7xl">Make room for<br /><em className="font-normal text-[#d78b63]">the remarkable.</em></h2>
+            <p className="mt-7 max-w-xl text-sm leading-7 text-[#c7beb0]">Whether you are shaping a new idea or looking for one to stand behind, there is a place for you here.</p>
+          </div>
+          <div className="mt-10 flex flex-col gap-3 lg:mt-0">
+            <Link
+              href="/register"
+              className="h-12 rounded-none bg-[#f7f0e3] px-5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#24231f] hover:bg-[#e8c67a] transition-all flex items-center justify-center gap-1.5"
+            >
+              <span>Create your account</span>
+              <ArrowUpRight size={15} />
+            </Link>
+            <Link href="/dashboard/add-campaign" className="border-b border-white/25 py-3 text-center text-[10px] font-bold uppercase tracking-[0.14em] text-[#f7f0e3] transition-colors hover:border-[#e8c67a] hover:text-[#e8c67a]">
+              Launch a project
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
